@@ -3,6 +3,11 @@ from .regulator import Regulator
 from .simulation_state import simulation_state
 from interface.user_input import user_inputs
 from .data_collector import DataCollector
+import logging
+import streamlit as st
+
+logging.basicConfig(filename='simulation_errors.log', level=logging.ERROR,
+                    format='%(asctime)s %(levelname)s: %(message)s')
 
 class SimulationEngine:
     def __init__(self):
@@ -20,12 +25,17 @@ class SimulationEngine:
     def step(self):
         if not simulation_state.active:
             return
-        regulatory_conditions = self.get_regulatory_conditions()
-        for farmer in self.farmers:
-            farmer.step(self.market_conditions, regulatory_conditions)
-        for regulator in self.regulators:
-            regulator.step(self.market_conditions)
-        self.data_collector.collect(self.farmers)
+        try:
+            regulatory_conditions = self.get_regulatory_conditions()
+            for farmer in self.farmers:
+                farmer.step(self.market_conditions, regulatory_conditions)
+            for regulator in self.regulators:
+                regulator.step(self.market_conditions)
+            self.data_collector.collect(self.farmers)
+            # Here add steps related to any new agents
+        except Exception as e:
+            logging.error('An error occurred in the simulation step: %s', e)
+            st.error('An error occurred in the simulation step. Please check the logs for more details.')
 
     def get_regulatory_conditions(self):
         reg_conditions = user_inputs.get('regulatory_conditions', 'Lenient')
@@ -44,12 +54,17 @@ class SimulationEngine:
     def run(self, steps=24):
         self.reset()
         simulation_state.start()
-        for _ in range(steps):
-            if not simulation_state.active:
-                break  # Stop the simulation if the active flag is False
-            self.set_market_conditions()
-            self.step()
-        simulation_state.stop()
+        try:
+            for _ in range(steps):
+                if not simulation_state.active:
+                    break
+                self.set_market_conditions()
+                self.step()
+        except Exception as e:
+            logging.error('An error occurred during the simulation run: %s', e)
+            st.error('An error occurred during the simulation run. Please check the logs for more details.')
+        finally:
+            simulation_state.stop()
 
     def reset(self):
         self.farmers = [Farmer('Farmer1', 100, True)]
@@ -59,3 +74,4 @@ class SimulationEngine:
     
     def get_simulation_data(self):
         return self.data_collector.to_dataframe()
+
