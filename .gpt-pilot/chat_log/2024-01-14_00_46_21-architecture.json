@@ -1,0 +1,37 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "process_technologies",
+      "description": "Print the list of technologies that are created.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "technologies": {
+            "type": "array",
+            "description": "List of technologies.",
+            "items": {
+              "type": "string",
+              "description": "technology"
+            }
+          }
+        },
+        "required": [
+          "technologies"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "technologies": [
+      "Streamlit",
+      "Python",
+      "Pandas",
+      "numpy",
+      "matplotlib",
+      "altair",
+      "Git"
+    ]
+  }
+}

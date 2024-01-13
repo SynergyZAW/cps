@@ -1,0 +1,25 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "get_fully_coded_file",
+      "description": "Gets the fully coded file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_content": {
+            "type": "string",
+            "description": "Fully coded file. This contains only the lines of code and no other text."
+          }
+        },
+        "required": [
+          "file_content"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "file_content": "from .farmer import Farmer\nfrom .regulator import Regulator\nfrom .simulation_state import simulation_state  \nfrom interface.user_input import user_inputs    \nfrom .data_collector import DataCollector\n\nclass SimulationEngine:\n    def __init__(self):\n        self.farmers = []\n        self.regulators = []\n        self.market_conditions = None\n        self.data_collector = DataCollector()\n    \n    def add_farmer(self, name, production_capacity, compliance):\n        farmer = Farmer(name, production_capacity, compliance)\n        self.farmers.append(farmer)\n\n    def add_regulator(self, name, policy_influence):\n        regulator = Regulator(name, policy_influence)\n        self.regulators.append(regulator)\n\n    def set_market_conditions(self):\n        self.market_conditions = user_inputs.get('market_demand')\n\n    def step(self):\n        if not simulation_state.active:\n            return\n        for farmer in self.farmers:\n            production = min(farmer.production_capacity, self.market_conditions.get('demand'))\n            revenue = production * self.market_conditions.get('price')\n            farmer.produce(production)\n            farmer.earn(revenue)\n            farmer.comply_with_regulations()\n        for regulator in self.regulators:\n            regulator.implement_policies()\n            regulator.affect_market_conditions(self.market_conditions)\n        self.data_collector.collect(self.farmers)\n\n    def reset(self):\n        self.farmers = []\n        self.regulators = []\n        self.market_conditions = None\n        self.data_collector.reset()\n    \n    def get_simulation_data(self):\n        return self.data_collector.to_dataframe()\n\n    def run(self, steps=24):\n        for _ in range(steps):\n            self.set_market_conditions()\n            self.step()\n"
+  }
+}

@@ -1,0 +1,57 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are an experienced project owner (project manager) who manages the entire process of creating software applications
+    for clients from the client specifications to the development. You act as if you are talking to the client who wants his
+    idea about a software application created by you and your team. You always think step by step and ask detailed questions
+    to completely understand what does the client want and then, you give those specifications to the development team who
+    creates the code for the app. Any instruction you get that is labeled as **IMPORTANT**, you follow strictly.
+- role: user
+  content: "I want you to create App (let's call it \"ABM\") that can be described like this:\n```\nDevelopment of a Basic\
+    \ Agent-Based Model (ABM) named \"ABM\" will be undertaken to simulate the South African cannabis and hemp industry using\
+    \ Streamlit. This basic version will feature two types of agents: Farmers (formal and informal) with attributes like production\
+    \ capacity and compliance status, and Regulators who affect market conditions and policies. The interactions will allow\
+    \ Farmers to respond to market conditions and Regulators to implement policies.\n\nThe simulation will run over a timeframe\
+    \ of two years per execution and is designed for a single user without support for multiple simultaneous users. The Streamlit\
+    \ interface will enable user input for parameters such as market demand and regulatory conditions through sliders or input\
+    \ fields. Users can control the simulation with start, stop, and reset buttons.\n\nData visualization will present results\
+    \ through graphs or tables, showcasing key outputs like total production and compliance levels. However, no feedback mechanism\
+    \ for user input is required for this application.\n\nDevelopment guidelines include maintaining a clean, well-documented\
+    \ codebase, ensuring user-friendliness, and prioritizing quick loading and smooth interaction. Codebase documentation\
+    \ will consist of an overview, in-code comments, descriptive docstrings, a comprehensive README file, API documentation\
+    \ (if applicable), a change log or version control messages, testing documentation, deployment instructions, coding standards,\
+    \ and future development notes.\n\nThe implementation does not require the collection of historical data input from users\
+    \ since default values for the simulation parameters will be provided, which users can adjust. Design should account for\
+    \ scalability for eventual enhancement with more complex features.\n```\n\n\nHere are some additional questions and answers\
+    \ to clarify the App description:\n```\n\n    \n    Q: 2 years\n    \n\n    \n    A: Should the application support multiple\
+    \ simultaneous users running separate simulations?\n    \n\n    \n    Q: no\n    \n\n    \n    A: How should the feedback\
+    \ from users on app functionality be collected and accessed?\n    \n\n    \n    Q: no feedback required\n    \n\n    \n\
+    \    A: What level of detail is required for the documentation of the codebase?\n    \n\n    \n    Q: Plan for Codebase\
+    \ Documentation\nOverview Documentation:\n\nProvide a high-level description of the application, including its purpose,\
+    \ functionality, and architecture.\nInclude a brief on how the ABM simulates the cannabis and hemp industry in South Africa.\n\
+    In-Code Documentation:\n\nUse comments generously to explain the purpose and logic of complex or non-obvious code segments.\n\
+    Ensure that each function, class, and module has a descriptive docstring explaining its role, inputs, outputs, and any\
+    \ side effects.\nReadMe File:\n\nCreate a comprehensive README file in the project's root directory.\nInclude setup instructions,\
+    \ dependencies, how to run the application, and basic troubleshooting.\nAPI Documentation (if applicable):\n\nIf the application\
+    \ exposes or consumes any APIs, document these interactions clearly.\nDetail the endpoints, request-response structures,\
+    \ and error handling.\nChange Log:\n\nMaintain a change log or use version control commit messages to record changes over\
+    \ time.\nThis is crucial for tracking the evolution of the application and understanding the rationale behind changes.\n\
+    Testing Documentation:\n\nDocument the testing approach, including how to run tests and interpret results.\nInclude information\
+    \ on any continuous integration setups.\nDeployment Instructions:\n\nProvide step-by-step instructions on how to deploy\
+    \ the application, including any environment setup and configuration.\nBest Practices and Coding Standards:\n\nOutline\
+    \ the coding standards and best practices followed in the project.\nThis helps in maintaining consistency across the codebase.\n\
+    Future Development Notes:\n\nInclude notes or sections on areas for potential future development or enhancement.\nHighlight\
+    \ any known issues or limitations that need addressing.\n    \n\n    \n    A: Does the simulation need to support historical\
+    \ data input to reflect past market conditions and regulatory changes?\n    \n\n    \n    Q: we will provide default values\
+    \ for parameters that the user can adjust\n    \n\n```\n\n\nThink step by step about the description for the App \"ABM\"\
+    \ and the additional questions and answers and break down user stories. You will think about the App description and the\
+    \ answers listed and create a list of all user stories. A user story is a description of how a user can interact with\
+    \ the App. For example, if an app's description is `Create a script that finds Youtube channels with the word \"test\"\
+    \ inside the channel name`, user stories could be:\n- `user will run the script from the CLI`\n- `user will get the list\
+    \ of all channels in a CSV file`\n\n**IMPORTANT**\nReturn one user story at the time. Do not return anything else but\
+    \ single user story. I might ask you to modify some user stories and only when I send you empty response you can move\
+    \ to next user story.\n\n**IMPORTANT**\nOnce you are done creating all user stories, write the response containing nothing\
+    \ else but this:\nEVERYTHING_CLEAR"
+response: User will input parameters for market demand and regulatory conditions using sliders or input fields in the Streamlit
+  interface.

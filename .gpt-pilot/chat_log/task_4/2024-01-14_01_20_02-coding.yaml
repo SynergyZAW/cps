@@ -1,0 +1,69 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are a full stack software developer who works in a software development agency. You write very modular and
+    clean code. Your job is to implement tasks that your tech lead assigns you. Each task has a description of what needs
+    to be implemented, a programmatic goal that will determine if a task can be marked as done and user-review goal that will
+    determine if a task is done or not but from a user perspective since it will be reviewed by a human.
+- role: user
+  content: "Here is how the file `simulation/simulation_engine.py` looks like right now:\n```\nfrom .farmer import Farmer\n\
+    from .regulator import Regulator\nfrom .simulation_state import simulation_state\nfrom interface.user_input import user_inputs\n\
+    from .data_collector import DataCollector\n\nclass SimulationEngine:\n    def __init__(self):\n        self.farmers =\
+    \ [Farmer('Farmer1', 100, True)]\n        self.regulators = [Regulator('Regulator1', 0.1)]\n        self.market_conditions\
+    \ = {'demand': 0, 'price': 0}\n        self.data_collector = DataCollector()\n\n    def set_market_conditions(self):\n\
+    \        self.market_conditions = {\n            'demand': user_inputs.get('market_demand', 0),\n            # INPUT_REQUIRED\
+    \ {Adjust price based on simulation needs}\n            'price': 10\n        }\n\n    def step(self):\n        if not\
+    \ simulation_state.active:\n            return\n        regulatory_conditions = self.get_regulatory_conditions()\n   \
+    \     for farmer in self.farmers:\n            farmer.step(self.market_conditions, regulatory_conditions)\n        for\
+    \ regulator in self.regulators:\n            regulator.step(self.market_conditions)\n        self.data_collector.collect(self.farmers)\n\
+    \n    def get_regulatory_conditions(self):\n        regulatory_conditions = {\n            'compliance_factor': 1,  \n\
+    \            'other_factors': {}     \n        }\n        for reg in self.regulators:\n            effect = reg.policy_influence_effect()\n\
+    \            regulatory_conditions['compliance_factor'] *= effect.get('compliance_factor', 1)\n            for k, v in\
+    \ effect.get('other_factors', {}).items():\n                regulatory_conditions['other_factors'][k] = v\n        return\
+    \ regulatory_conditions\n\n    def run(self, steps=24):\n        self.reset()\n        simulation_state.start()\n    \
+    \    for _ in range(steps):\n            if not simulation_state.active:\n                break  # Stop the simulation\
+    \ if the active flag is False\n            self.set_market_conditions()\n            self.step()\n        simulation_state.stop()\n\
+    \n    def reset(self):\n        # INPUT_REQUIRED {Reset or create farmers with initial parameters}\n        self.farmers\
+    \ = [Farmer('Farmer1', 100, True)]\n        # INPUT_REQUIRED {Reset or create regulators with initial parameters}\n  \
+    \      self.regulators = [Regulator('Regulator1', 0.1)]\n        self.market_conditions = {'demand': 0, 'price': 0}\n\
+    \        self.data_collector.reset()\n    \n    def get_simulation_data(self):\n        return self.data_collector.to_dataframe()\n\
+    \n```\n\nAnd here is the new implementation for the same file:\n```\nfrom .farmer import Farmer\nfrom .regulator import\
+    \ Regulator\nfrom .simulation_state import simulation_state\nfrom interface.user_input import user_inputs\nfrom .data_collector\
+    \ import DataCollector\n\nclass SimulationEngine:\n    def __init__(self):\n        // [OLD CODE] Initial attributes and\
+    \ methods\n    def set_market_conditions(self):\n        // [OLD CODE] Setting market conditions other than compliance\
+    \ factor\n    def step(self):\n        // [OLD CODE] Define a step in the simulation\n    def get_regulatory_conditions(self):\n\
+    \        reg_conditions = user_inputs.get('regulatory_conditions', 'Lenient')\n        custom_compliance_factor = user_inputs.get('custom_compliance_factor',\
+    \ 1)\n        compliance_factor = {\n            'Lenient': 1.2,\n            'Strict': 0.8,\n            'Custom': custom_compliance_factor\n\
+    \        }.get(reg_conditions, 1)\n\n        return {\n            'compliance_factor': compliance_factor,\n         \
+    \   'other_factors': {}\n        }\n    // [OLD CODE] Any remaining methods\n}\n```\n\nNow, implement the new changes\
+    \ into the previously implemented file and return the entirely coded file. Do not add any lines of code that are not in\
+    \ the previously coded file or the new implementation but only combine those two.\n\n**IMPORTANT**\nAll lines of code\
+    \ in the new implementation should be present. From the old implementation, only take the ones that are replaced with\
+    \ the comment `[OLD CODE]` in the new implementation\n\n**IMPORTANT**\nMake sure that you respond with all lines of code\
+    \ that are replaced by these comments, including all control structures, error handling, and any other relevant logic\
+    \ that was in the original code.\nUnder no circumstances should you ever leave any part of the code snippet unwritten.\
+    \ Every single line of code that exists in the place where the comment lives right now should be replaced. Do not include\
+    \ any code that is above or below the comment but only the code that should be in the position of the comment."
+- role: user
+  content: "**IMPORTANT**\nYou must respond with ONLY the JSON object, with NO additional text or explanation.\n\nHere is\
+    \ the schema for the expected JSON object:\n```json\n{\n    \"file_content\": {\n        \"type\": \"string\",\n     \
+    \   \"description\": \"Fully coded file. This contains only the lines of code and no other text.\"\n    }\n}\n```\n\n"
+response: "```json\n{\n    \"file_content\": \"from .farmer import Farmer\\nfrom .regulator import Regulator\\nfrom .simulation_state\
+  \ import simulation_state\\nfrom interface.user_input import user_inputs\\nfrom .data_collector import DataCollector\\n\\\
+  nclass SimulationEngine:\\n    def __init__(self):\\n        self.farmers = [Farmer('Farmer1', 100, True)]\\n        self.regulators\
+  \ = [Regulator('Regulator1', 0.1)]\\n        self.market_conditions = {'demand': 0, 'price': 0}\\n        self.data_collector\
+  \ = DataCollector()\\n\\n    def set_market_conditions(self):\\n        self.market_conditions = {\\n            'demand':\
+  \ user_inputs.get('market_demand', 0),\\n            'price': 10\\n        }\\n\\n    def step(self):\\n        if not simulation_state.active:\\\
+  n            return\\n        regulatory_conditions = self.get_regulatory_conditions()\\n        for farmer in self.farmers:\\\
+  n            farmer.step(self.market_conditions, regulatory_conditions)\\n        for regulator in self.regulators:\\n \
+  \           regulator.step(self.market_conditions)\\n        self.data_collector.collect(self.farmers)\\n\\n    def get_regulatory_conditions(self):\\\
+  n        reg_conditions = user_inputs.get('regulatory_conditions', 'Lenient')\\n        custom_compliance_factor = user_inputs.get('custom_compliance_factor',\
+  \ 1)\\n        compliance_factor = {\\n            'Lenient': 1.2,\\n            'Strict': 0.8,\\n            'Custom':\
+  \ custom_compliance_factor\\n        }.get(reg_conditions, 1)\\n\\n        return {\\n            'compliance_factor': compliance_factor,\\\
+  n            'other_factors': {}\\n        }\\n\\n    def run(self, steps=24):\\n        self.reset()\\n        simulation_state.start()\\\
+  n        for _ in range(steps):\\n            if not simulation_state.active:\\n                break  # Stop the simulation\
+  \ if the active flag is False\\n            self.set_market_conditions()\\n            self.step()\\n        simulation_state.stop()\\\
+  n\\n    def reset(self):\\n        self.farmers = [Farmer('Farmer1', 100, True)]\\n        self.regulators = [Regulator('Regulator1',\
+  \ 0.1)]\\n        self.market_conditions = {'demand': 0, 'price': 0}\\n        self.data_collector.reset()\\n    \\n   \
+  \ def get_simulation_data(self):\\n        return self.data_collector.to_dataframe()\\n\"\n}\n```"

@@ -1,0 +1,121 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "parse_development_task",
+      "description": "Breaks down the development task into smaller steps that need to be done to implement the entire task.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "description": "List of smaller development steps that need to be done to complete the entire task.",
+            "items": {
+              "type": "object",
+              "description": "A smaller development step that needs to be done to complete the entire task.  Remember, if you need to run a command that doesn't finish by itself (eg. a command to run an  If you need to create a directory that doesn't exist and is not the root project directory, always create it by running a command `mkdir`",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "command",
+                    "code_change",
+                    "human_intervention"
+                  ],
+                  "description": "Type of the development step that needs to be done to complete the entire task."
+                },
+                "command": {
+                  "type": "object",
+                  "description": "Command that needs to be run to complete the current task. This should be used only if the task is of a type \"command\".",
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "description": "A single command that needs to be executed."
+                    },
+                    "timeout": {
+                      "type": "number",
+                      "description": "Timeout in milliseconds that represent the approximate time this command takes to finish. If you need to run a command that doesnt't finish by itself (eg. a command to run an app), set the timeout to to a value long enough to determine that it has started successfully and provide a command_id. If you need to create a directory that doesn't exist and is not the root project directory, always create it by running a command `mkdir`"
+                    },
+                    "success_message": {
+                      "type": "string",
+                      "description": "A message to look for in the output of the command to determine if successful or not."
+                    },
+                    "command_id": {
+                      "type": "string",
+                      "description": "If the process needs to continue running after the command is executed provide a unique command identifier which you can use to kill the process later."
+                    }
+                  },
+                  "required": [
+                    "command",
+                    "timeout"
+                  ]
+                },
+                "code_change": {
+                  "type": "object",
+                  "description": "A code change that needs to be implemented. This should be used only if the task is of a type \"code_change\".",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the file that needs to be implemented."
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Full path of the file with the file name that needs to be implemented."
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Full content of the file that needs to be implemented. **IMPORTANT**When you want to add a comment that tells the user to add the previous implementation at that place, make sure that the comment starts with `[OLD CODE]` and add a description of what old code should be inserted here. For example, `[OLD CODE] Login route`."
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "path",
+                    "content"
+                  ]
+                },
+                "human_intervention_description": {
+                  "type": "string",
+                  "description": "Description of a step in debugging this issue when there is a human intervention needed. This should be used only if the task is of a type \"human_intervention\"."
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "tasks": [
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "user_input.py",
+          "path": "/interface/user_input.py",
+          "content": "import streamlit as st\n\nuser_inputs = {}\n\ndef show():\n    st.sidebar.header(\"User Inputs\")\n\n    user_inputs['market_demand'] = st.sidebar.slider('Market Demand', min_value=0, max_value=100, value=50)\n    reg_conditions = st.sidebar.radio('Regulatory Conditions', ['Lenient', 'Strict', 'Custom'])\n    user_inputs['regulatory_conditions'] = reg_conditions\n\n    if reg_conditions == 'Custom':\n        compliance_factor = st.sidebar.number_input('Custom Compliance Factor', \n                                                    min_value=0.5, \n                                                    max_value=2.0, \n                                                    value=1.0)\n        user_inputs['custom_compliance_factor'] = compliance_factor\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "simulation_engine.py",
+          "path": "/simulation/simulation_engine.py",
+          "content": "from .farmer import Farmer\nfrom .regulator import Regulator\nfrom .simulation_state import simulation_state\nfrom interface.user_input import user_inputs\nfrom .data_collector import DataCollector\n\nclass SimulationEngine:\n    def __init__(self):\n        // [OLD CODE] Initial attributes and methods\n    def set_market_conditions(self):\n        // [OLD CODE] Setting market conditions other than compliance factor\n    def step(self):\n        // [OLD CODE] Define a step in the simulation\n    def get_regulatory_conditions(self):\n        reg_conditions = user_inputs.get('regulatory_conditions', 'Lenient')\n        custom_compliance_factor = user_inputs.get('custom_compliance_factor', 1)\n        compliance_factor = {\n            'Lenient': 1.2,\n            'Strict': 0.8,\n            'Custom': custom_compliance_factor\n        }.get(reg_conditions, 1)\n\n        return {\n            'compliance_factor': compliance_factor,\n            'other_factors': {}\n        }\n    // [OLD CODE] Any remaining methods\n}"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "README.md",
+          "path": "/README.md",
+          "content": "# ABM: Agent-Based Model\n\n## Overview\nABM is a simplified simulation tool designed to model the South African cannabis and hemp industry dynamics using an agent-based approach in Streamlit. The model features two agent types: Farmers (both formal and informal) with attributes like production capacity and compliance status, and Regulators, influencing the market by policies. This simulation aims to help understand how these entities interact over a fixed period.\n\n## User Guide\nUsers interact with the ABM simulation through a Streamlit interface to:\n* Input market demand and regulatory conditions.\n* Control the simulation with start, stop, and reset functionalities.\n* Observe the outcomes through visualizations of production and compliance levels.\n\n(Updated Section)\n- Regulatory Conditions: Choose between 'Lenient', 'Strict', or 'Custom' to determine the stringency of regulations in the simulation. 'Custom' allows setting a specific compliance factor that affects farmer production.\n\n// [OLD CODE] Rest of README content\n"
+        }
+      }
+    ]
+  }
+}

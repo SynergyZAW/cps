@@ -1,0 +1,115 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are technical writer and as such, you excel in clear, concise communication, skillfully breaking down complex
+    technical concepts for a variety of audiences. Your proficiency in research and attention to detail ensures accuracy and
+    consistency in your work. You adeptly organize complex information in a user-friendly manner, understanding and anticipating
+    the needs of your audience. Your collaborative skills enhance your ability to work effectively with diverse teams. In
+    your role, you not only create documentation but also efficiently manage documentation projects, always prioritizing clarity
+    and usefulness for the end-user.
+- role: user
+  content: "You are working on a App called \"ABM\" and you need to create a detailed documentation for current state of project.\
+    \ Your first task is to create README.md file.\n\nHere is a high level description of \"ABM\":\n```\nDevelopment of a\
+    \ Basic Agent-Based Model (ABM) named \"ABM\" will be undertaken to simulate the South African cannabis and hemp industry\
+    \ using Streamlit. This basic version will feature two types of agents: Farmers (formal and informal) with attributes\
+    \ like production capacity and compliance status, and Regulators who affect market conditions and policies. The interactions\
+    \ will allow Farmers to respond to market conditions and Regulators to implement policies.\n\nThe simulation will run\
+    \ over a timeframe of two years per execution and is designed for a single user without support for multiple simultaneous\
+    \ users. The Streamlit interface will enable user input for parameters such as market demand and regulatory conditions\
+    \ through sliders or input fields. Users can control the simulation with start, stop, and reset buttons.\n\nData visualization\
+    \ will present results through graphs or tables, showcasing key outputs like total production and compliance levels. However,\
+    \ no feedback mechanism for user input is required for this application.\n\nDevelopment guidelines include maintaining\
+    \ a clean, well-documented codebase, ensuring user-friendliness, and prioritizing quick loading and smooth interaction.\
+    \ Codebase documentation will consist of an overview, in-code comments, descriptive docstrings, a comprehensive README\
+    \ file, API documentation (if applicable), a change log or version control messages, testing documentation, deployment\
+    \ instructions, coding standards, and future development notes.\n\nThe implementation does not require the collection\
+    \ of historical data input from users since default values for the simulation parameters will be provided, which users\
+    \ can adjust. Design should account for scalability for eventual enhancement with more complex features.\n```\n\n\nHere\
+    \ are user stories that specify how users use \"ABM\":\n```\n\n- User will input parameters for market demand and regulatory\
+    \ conditions using sliders or input fields in the Streamlit interface.\n\n- User will start the simulation by clicking\
+    \ the 'start' button in the Streamlit interface.\n\n- User will stop the ongoing simulation by clicking the 'stop' button\
+    \ in the Streamlit interface.\n\n- User will reset the simulation to initial conditions by clicking the 'reset' button\
+    \ in the Streamlit interface.\n\n- User will observe the total production output through graphs or tables within the Streamlit\
+    \ interface.\n\n- User will assess compliance levels of the Farmers through visualizations in the Streamlit interface.\n\
+    \n```\n\n\nHere are the technologies that you need to use for this project:\n```\n\n- Streamlit\n\n- Python\n\n- Pandas\n\
+    \n- numpy\n\n- matplotlib\n\n- altair\n\n- Git\n\n```\n\n\n\nHere are files that are currently implemented:\n\n**/streamlit_app.py**\n\
+    ```\nimport streamlit as st\nfrom interface import user_input, control_buttons, output_placeholders\n\ndef main():\n \
+    \   # Show User Input Section\n    user_input.show()\n\n    # Show Control Buttons\n    control_buttons.show()\n\n   \
+    \ # Show Output Placeholders\n    output_placeholders.show()\n\nif __name__ == \"__main__\":\n    main()\n\n```\n\n**interface/control_buttons.py**\n\
+    ```\nfrom simulation.simulation_state import simulation_state\nimport streamlit as st\n\n# We'll import the simulation\
+    \ engine so we can start and reset the simulation appropriately\nfrom simulation.simulation_engine import SimulationEngine\n\
+    \n\ndef show():\n    st.header(\"Simulation Control\")\n    if st.button('Start'):\n        # Update the simulation state\
+    \ to reflect that the simulation should be running\n        simulation_state.start()\n        # Start the simulation\n\
+    \        sim_engine = SimulationEngine()\n        sim_engine.run()\n\n    if st.button('Stop'):\n        # Update the\
+    \ simulation state to reflect that the simulation should be stopped\n        simulation_state.stop()\n\n    if st.button('Reset'):\n\
+    \        # Reset the simulation to initial conditions\n        simulation_state.reset()\n\n```\n\n**interface/output_placeholders.py**\n\
+    ```\nimport streamlit as st\n\ndef show():\n    st.header(\"Simulation Output\")\n    \n    # Placeholder for total production\
+    \ output graph\n    st.subheader(\"Total Production Output\")\n    st.write(\"Graph placeholder\")\n\n    # Placeholder\
+    \ for compliance levels graph/table\n    st.subheader(\"Compliance Levels\")\n    st.write(\"Graph/Table placeholder\"\
+    )\n\n```\n\n**interface/user_input.py**\n```\nimport streamlit as st\n\n# This is a global dictionary to hold user input\
+    \ values\nuser_inputs = {}\n\n\ndef show():\n    st.sidebar.header(\"User Inputs\")\n\n    # Use global dictionary to\
+    \ store the input values\n    user_inputs['market_demand'] = st.sidebar.slider('Market Demand', min_value=0, max_value=100,\
+    \ value=50)\n    user_inputs['regulatory_conditions'] = st.sidebar.text_input('Regulatory Conditions', \"\")\n\n```\n\n\
+    **simulation/agent.py**\n```\nclass Agent:\n    def __init__(self, name):\n        self.name = name\n\n    def step(self):\n\
+    \        pass  # INPUT_REQUIRED {Override this in subclasses with specific behavior}\n```\n\n**simulation/farmer.py**\n\
+    ```\nfrom .agent import Agent\n\nclass Farmer(Agent):\n    def __init__(self, name, production_capacity, compliance):\n\
+    \        super().__init__(name)\n        self.production_capacity = production_capacity\n        self.compliance = compliance\n\
+    \n    def step(self):\n        pass  # INPUT_REQUIRED {Define farmer behavior per simulation step}\n```\n\n**simulation/regulator.py**\n\
+    ```\nfrom .agent import Agent\n\nclass Regulator(Agent):\n    def __init__(self, name, policy_influence):\n        super().__init__(name)\n\
+    \        self.policy_influence = policy_influence\n\n    def step(self):\n        pass  # INPUT_REQUIRED {Define regulator's\
+    \ policy influence per simulation step}\n```\n\n**simulation/simulation_engine.py**\n```\nfrom .farmer import Farmer\n\
+    from .regulator import Regulator\nfrom .simulation_state import simulation_state  # Import the simulation state\nfrom\
+    \ interface.user_input import user_inputs    # Import the user inputs\n\nclass SimulationEngine:\n    def __init__(self):\n\
+    \        self.farmers = []\n        self.regulators = []\n        self.market_conditions = None\n    \n    def add_farmer(self,\
+    \ name, production_capacity, compliance):\n        farmer = Farmer(name, production_capacity, compliance)\n        self.farmers.append(farmer)\n\
+    \n    def add_regulator(self, name, policy_influence):\n        regulator = Regulator(name, policy_influence)\n      \
+    \  self.regulators.append(regulator)\n\n    def set_market_conditions(self):\n        # Retrieve market conditions from\
+    \ user inputs\n        self.market_conditions = user_inputs.get('market_demand')\n\n    def step(self):\n        if not\
+    \ simulation_state.active:\n            return  # Do nothing if simulation is stopped\n        for farmer in self.farmers:\n\
+    \            # Original implementation for farmer step\n            production = min(farmer.production_capacity, self.market_conditions.get('demand'))\n\
+    \            revenue = production * self.market_conditions.get('price')\n            farmer.produce(production)\n    \
+    \        farmer.earn(revenue)\n            farmer.comply_with_regulations()\n        for regulator in self.regulators:\n\
+    \            # Original implementation for regulator step\n            regulator.implement_policies()\n            regulator.affect_market_conditions(self.market_conditions)\n\
+    \n    def run(self, steps=24):\n        for _ in range(steps):\n            self.set_market_conditions()  # Update market\
+    \ conditions based on user input\n            self.step()\n\n```\n\n**simulation/simulation_state.py**\n```\nclass SimulationState:\n\
+    \    def __init__(self):\n        self.active = False  # Indicates if the simulation is active\n\n    def start(self):\n\
+    \        self.active = True\n\n    def stop(self):\n        self.active = False\n\n    def reset(self):\n        self.active\
+    \ = False\n        # Logic to reset the simulation's internal state was here\n\n# We instantiate a global state object\
+    \ to be shared across modules\nsimulation_state = SimulationState()\n\n```\n\n\nDO NOT specify commands to create any\
+    \ folders or files, they will be created automatically - just specify the relative path to file that needs to be written.\n\
+    \nNow, based on the project details provided, think step by step and create README.md file for this project."
+- role: user
+  content: "**IMPORTANT**\nYou must respond with ONLY the JSON object, with NO additional text or explanation.\n\nHere is\
+    \ the schema for the expected JSON object:\n```json\n{\n    \"name\": {\n        \"type\": \"string\",\n        \"description\"\
+    : \"Name of the documentation file that needs to be saved on the disk.\"\n    },\n    \"path\": {\n        \"type\": \"\
+    string\",\n        \"description\": \"Relative path of the documentation file with the file name that needs to be saved.\"\
+    \n    },\n    \"content\": {\n        \"type\": \"string\",\n        \"description\": \"Full content of the documentation\
+    \ file that needs to be saved on the disk. **IMPORTANT**When you want to add a comment that tells the user to add the\
+    \ previous implementation at that place, make sure that the comment starts with `[OLD CODE]` and add a description of\
+    \ what old code should be inserted here. For example, `[OLD CODE] Login route`.\"\n    }\n}\n```\n\n"
+response: "```json\n{\n    \"name\": \"README.md\",\n    \"path\": \"./README.md\",\n    \"content\": \"# ABM: Agent-Based\
+  \ Model\\n\\n## Overview\\nABM is a simplified simulation tool designed to model the South African cannabis and hemp industry\
+  \ dynamics using an agent-based approach in Streamlit. The model features two agent types: Farmers (both formal and informal)\
+  \ with attributes like production capacity and compliance status, and Regulators, influencing the market by policies. This\
+  \ simulation aims to help understand how these entities interact over a fixed period.\\n\\n## User Guide\\nUsers interact\
+  \ with the ABM simulation through a Streamlit interface to:\\n* Input market demand and regulatory conditions.\\n* Control\
+  \ the simulation with start, stop, and reset functionalities.\\n* Observe the outcomes through visualizations of production\
+  \ and compliance levels.\\n\\n## Installation & Running the Simulation\\n1. Clone the repository.\\n2. Install the required\
+  \ libraries: Streamlit, Python, Pandas, numpy, matplotlib, and altair.\\n3. Run the `streamlit run streamlit_app.py` command\
+  \ in your terminal to initiate the interface.\\n\\n## Features\\n* Interactive Streamlit UI for input parameter configuration.\\\
+  n* Start, stop, and reset controls for the simulation.\\n* Graphical representations for viewing simulation outputs.\\n\\\
+  n## Development and Contribution\\nThe codebase adheres to clean-coding principles and is well-documented to facilitate\
+  \ contributions. Developers should refer to in-code comments and docstrings for guidance. Contributions towards expanding\
+  \ the ABM's features and scalability are welcome.\\n\\nFor developers, please ensure you:\\n* Maintain the coding standards\
+  \ as per the documentation.\\n* Update the README.md and CHANGELOG.md as appropriate for new features or bug fixes.\\n*\
+  \ Add unit tests for new code to ensure reliability.\\n\\n## Technical Architecture\\nABM runs a Streamlit application (`streamlit_app.py`)\
+  \ that includes user input collection, control buttons, and output placeholders separated into modular Python files. The\
+  \ simulation logic is encapsulated in `simulation_engine.py`, iterating over the various agent classes such as `farmer.py`\
+  \ and `regulator.py`.\\n\\n## Project Structure\\nThe project comprises several modules:\\n* `/streamlit_app.py`: The entry\
+  \ point for the Streamlit application.\\n* `/interface`: Modules for the user input, control buttons, and outputs display.\\\
+  n* `/simulation`: Core modules for the agent-based model, including agent definitions and the simulation engine.\\n\\n##\
+  \ License\\nThis project is released under the XYZ License. For more details, see the `LICENSE` file included in the repository.\\\
+  n\\n## Contact\\nFor questions, suggestions, or contributions, please open an issue in the repository, and a maintainer\
+  \ will get back to you.\\n\\n### Disclaimer\\nThis simulation is a basic model and may not account for all real-world dynamics\
+  \ of the South African cannabis and hemp industry. It is intended for educational and research purposes only.\"\n}\n```"

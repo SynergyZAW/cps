@@ -1,0 +1,74 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "implement_development_plan",
+      "description": "Implements the development plan.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "type": "array",
+            "description": "List of development tasks that need to be done to implement the entire plan.",
+            "items": {
+              "type": "object",
+              "description": "Development task that needs to be done to implement the entire plan.",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "Description of the development task that needs to be done to implement the entire plan."
+                },
+                "programmatic_goal": {
+                  "type": "string",
+                  "description": "Detailed description of programmatic goal. Programmatic goal that will determine if a task can be marked as done from a programmatic perspective (this will result in an automated test that is run before the task is sent to you for a review). All details previously specified by user that are important for this task must be included in this programmatic goal."
+                },
+                "user_review_goal": {
+                  "type": "string",
+                  "description": "User review goal that will determine if a task is done or not, but from a user perspective since it will be reviewed by a human."
+                }
+              },
+              "required": [
+                "description",
+                "programmatic_goal",
+                "user_review_goal"
+              ]
+            }
+          }
+        },
+        "required": [
+          "plan"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "plan": [
+      {
+        "description": "Set up a basic Streamlit app with a simple interface that has placeholder elements for user inputs (sliders and input fields), control buttons (start, stop, reset), and placeholders for visualizing outputs (graphs and tables).",
+        "programmatic_goal": "Create a Streamlit interface with mock sliders, input fields, buttons, and placeholders for visualizations. Commit codebase to Git repository.",
+        "user_review_goal": "Ensure the Streamlit app launches with the defined elements visible and accessible, even if they are non-functional."
+      },
+      {
+        "description": "Develop the ABM simulation engine in Python using classes to define Farmers and Regulators with their attributes and methods for their behaviors and interactions.",
+        "programmatic_goal": "Implement classes with attributes and methods, and test interactions between Farmers and Regulators without UI integration.",
+        "user_review_goal": "Verify the logic and interactions of Farmers and Regulators through unit tests."
+      },
+      {
+        "description": "Integrate the ABM simulation engine with the Streamlit app, connecting user inputs to the simulation parameters and enabling the control buttons to start, stop, and reset the simulation.",
+        "programmatic_goal": "Complete Streamlit integration to perform simulations and respond to start, stop, and reset button actions. Commit updated code to Git.",
+        "user_review_goal": "User can start, stop, and reset simulations using the buttons, and the simulation respects the inputs from the user."
+      },
+      {
+        "description": "Implement data visualization for total production output and compliance levels using matplotlib and altair for graphs, and pandas for data manipulation.",
+        "programmatic_goal": "Produce dynamic graphs and tables which update according to the simulation's progress. Ensure visualizations are committed to Git repository.",
+        "user_review_goal": "User views accurate and responsive graphs and tables reflecting total production and compliance levels corresponding to the simulation's outputs."
+      },
+      {
+        "description": "Conduct a stream of beta tests of the entire Streamlit app through iterative development cycles to ensure all parts work together smoothly, iron out any bugs and enhance the user interface based on feedback.",
+        "programmatic_goal": "Iteratively refine code and user interface based on beta test results, with all changes committed to Git.",
+        "user_review_goal": "The app functions without bugs, responds swiftly to user inputs, and provides a user-friendly experience with clear, comprehensible visualizations."
+      }
+    ]
+  }
+}

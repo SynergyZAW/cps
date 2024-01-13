@@ -1,0 +1,25 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "get_fully_coded_file",
+      "description": "Gets the fully coded file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_content": {
+            "type": "string",
+            "description": "Fully coded file. This contains only the lines of code and no other text."
+          }
+        },
+        "required": [
+          "file_content"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "file_content": "from .agent import Agent\n\nclass Farmer(Agent):\n    def __init__(self, name, production_capacity, compliance):\n        super().__init__(name)\n        self.production_capacity = production_capacity\n        self.compliance = compliance\n        self.production = 0\n\n    def produce(self, amount):\n        self.production += amount\n\n    def earn(self, revenue):\n        pass\n\n    def step(self, market_conditions, regulatory_conditions):\n        if self.compliance:\n            adjusted_production_capacity = self.production_capacity * regulatory_conditions.get('compliance_factor', 1)\n        else:\n            adjusted_production_capacity = self.production_capacity\n        demand = market_conditions.get('demand', 0)\n        price = market_conditions.get('price', 0)\n        production = min(adjusted_production_capacity, demand)\n        self.produce(production)\n        self.earn(production * price)\n        # Implement changes in compliance based on regulatory conditions\n        # INPUT_REQUIRED {Add follow-up actions for Farmer based on regulatory conditions}\n"
+  }
+}
