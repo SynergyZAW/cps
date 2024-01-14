@@ -9,7 +9,7 @@
 - List of changes to existing functionality
 
 ### Fixed
-- List of bug fixes
+- Display actual graphs instead of placeholders in the simulation output.
 - Issue 1: brief description of the fix
 - Issue 2: brief description of the fix
 ...
