@@ -1,0 +1,128 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are an experienced software architect. Your expertise is in creating an architecture for an MVP (minimum viable
+    products) for Apps that can be developed as fast as possible by using as many ready-made technologies as possible.
+- role: user
+  content: 'You are working in a software development agency and a project manager approached you telling you that you''re
+    assigned to work on a new project. You  are working on a App called "ABM" and you need to create specifications on what
+    technologies should be used in this project.
+
+
+    Here is a high level description of "ABM":
+
+    ```
+
+    Development of a Basic Agent-Based Model (ABM) named "ABM" will be undertaken to simulate the South African cannabis and
+    hemp industry using Streamlit. This basic version will feature two types of agents: Farmers (formal and informal) with
+    attributes like production capacity and compliance status, and Regulators who affect market conditions and policies. The
+    interactions will allow Farmers to respond to market conditions and Regulators to implement policies.
+
+
+    The simulation will run over a timeframe of two years per execution and is designed for a single user without support
+    for multiple simultaneous users. The Streamlit interface will enable user input for parameters such as market demand and
+    regulatory conditions through sliders or input fields. Users can control the simulation with start, stop, and reset buttons.
+
+
+    Data visualization will present results through graphs or tables, showcasing key outputs like total production and compliance
+    levels. However, no feedback mechanism for user input is required for this application.
+
+
+    Development guidelines include maintaining a clean, well-documented codebase, ensuring user-friendliness, and prioritizing
+    quick loading and smooth interaction. Codebase documentation will consist of an overview, in-code comments, descriptive
+    docstrings, a comprehensive README file, API documentation (if applicable), a change log or version control messages,
+    testing documentation, deployment instructions, coding standards, and future development notes.
+
+
+    The implementation does not require the collection of historical data input from users since default values for the simulation
+    parameters will be provided, which users can adjust. Design should account for scalability for eventual enhancement with
+    more complex features.
+
+    ```
+
+
+
+    Here are user stories that specify how users use "ABM":
+
+    ```
+
+
+    - User will input parameters for market demand and regulatory conditions using sliders or input fields in the Streamlit
+    interface.
+
+
+    - User will start the simulation by clicking the ''start'' button in the Streamlit interface.
+
+
+    - User will stop the ongoing simulation by clicking the ''stop'' button in the Streamlit interface.
+
+
+    - User will reset the simulation to initial conditions by clicking the ''reset'' button in the Streamlit interface.
+
+
+    - User will observe the total production output through graphs or tables within the Streamlit interface.
+
+
+    - User will assess compliance levels of the Farmers through visualizations in the Streamlit interface.
+
+
+    ```
+
+
+
+
+    Now, based on the projects details, think step by step and list the names of the technologies that will be used by your
+    development team to create the app "ABM".
+
+    Do not give any subjective thoughts or options, give exact technologies, for example:
+
+    Instead of ["D3.js or other suitable charting library", "axios or other http client library"] answer with ["D3.js", "axios"].
+
+
+    You do not need to list any technologies related to automated tests (like Jest, Cypress, Mocha, Selenium, etc) or  any
+    technologies related to deployment (like Heroku).
+
+
+    **Project Technology Guidelines**
+
+    Relevance: Only include technologies that are essential and will be actively used in the project. Avoid mentioning any
+    technologies that are not required. For example, don''t suggest MongoDB if database is not needed for project.
+
+    Compatibility: Ensure that the listed technologies are compatible with each other. Exclude any technologies that cannot
+    be integrated or used in conjunction with others. For example, Pandas (Python library) and Node.js can''t be used together.
+    Another example is MongoDB (NoSQL database) and MySQL (SQL database) shouldn''t be used together unless that is specified
+    in project description.
+
+    Technology Preferences: In scenarios where multiple technology options are available for a specific project component,
+    prioritize the following preferred technologies:
+
+    - Node.js,
+
+    - MongoDB,
+
+    - PeeWee,
+
+    - Bootstrap,
+
+    - HTML,
+
+    - CSS3,
+
+    - cronjob,
+
+    - Socket.io
+
+
+    **IMPORTANT**
+
+    Do not use, create or suggest any microservices. Create strictly monolithic application even if in some prompts I might
+    suggest microservices might be better or more desired solution. Do your best to find a solution to any requirement without
+    using microservices.'
+- role: user
+  content: "**IMPORTANT**\nYou must respond with ONLY the JSON object, with NO additional text or explanation.\n\nHere is\
+    \ the schema for the expected JSON object:\n```json\n{\n    \"technologies\": {\n        \"type\": \"array\",\n      \
+    \  \"description\": \"List of technologies.\",\n        \"items\": {\n            \"type\": \"string\",\n            \"\
+    description\": \"technology\"\n        }\n    }\n}\n```\n\n"
+response: "```json\n{\n    \"technologies\": [\n        \"Streamlit\",\n        \"Python\",\n        \"Pandas\",\n       \
+  \ \"numpy\",\n        \"matplotlib\",\n        \"altair\",\n        \"Git\"\n    ]\n}\n```"

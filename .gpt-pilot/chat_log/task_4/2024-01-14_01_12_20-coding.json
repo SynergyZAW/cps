@@ -1,0 +1,25 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "get_fully_coded_file",
+      "description": "Gets the fully coded file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_content": {
+            "type": "string",
+            "description": "Fully coded file. This contains only the lines of code and no other text."
+          }
+        },
+        "required": [
+          "file_content"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "file_content": "import streamlit as st\nimport matplotlib\nmatplotlib.use('Agg')\nfrom visualization.production_output import show_total_production\nfrom visualization.compliance_levels import show_compliance_levels\n\ndef display_visualizations(simulation_data):\n    st.subheader(\"Total Production Output\")\n    total_production_chart = show_total_production(simulation_data)\n    st.pyplot(total_production_chart)\n\n    st.subheader(\"Compliance Levels\")\n    compliance_levels_chart = show_compliance_levels(simulation_data)\n    st.altair_chart(compliance_levels_chart, use_container_width=True)\n"
+  }
+}

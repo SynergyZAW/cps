@@ -1,0 +1,289 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are a full stack software developer who works in a software development agency. You write very modular and
+    clean code. Your job is to implement tasks that your tech lead assigns you. Each task has a description of what needs
+    to be implemented, a programmatic goal that will determine if a task can be marked as done and user-review goal that will
+    determine if a task is done or not but from a user perspective since it will be reviewed by a human.
+- role: user
+  content: "You are working on a App called \"ABM\" and you need to write code for the entire application.\n\nHere is a high\
+    \ level description of \"ABM\":\n```\nDevelopment of a Basic Agent-Based Model (ABM) named \"ABM\" will be undertaken\
+    \ to simulate the South African cannabis and hemp industry using Streamlit. This basic version will feature two types\
+    \ of agents: Farmers (formal and informal) with attributes like production capacity and compliance status, and Regulators\
+    \ who affect market conditions and policies. The interactions will allow Farmers to respond to market conditions and Regulators\
+    \ to implement policies.\n\nThe simulation will run over a timeframe of two years per execution and is designed for a\
+    \ single user without support for multiple simultaneous users. The Streamlit interface will enable user input for parameters\
+    \ such as market demand and regulatory conditions through sliders or input fields. Users can control the simulation with\
+    \ start, stop, and reset buttons.\n\nData visualization will present results through graphs or tables, showcasing key\
+    \ outputs like total production and compliance levels. However, no feedback mechanism for user input is required for this\
+    \ application.\n\nDevelopment guidelines include maintaining a clean, well-documented codebase, ensuring user-friendliness,\
+    \ and prioritizing quick loading and smooth interaction. Codebase documentation will consist of an overview, in-code comments,\
+    \ descriptive docstrings, a comprehensive README file, API documentation (if applicable), a change log or version control\
+    \ messages, testing documentation, deployment instructions, coding standards, and future development notes.\n\nThe implementation\
+    \ does not require the collection of historical data input from users since default values for the simulation parameters\
+    \ will be provided, which users can adjust. Design should account for scalability for eventual enhancement with more complex\
+    \ features.\n```\n\nHere are the technologies that you need to use for this project:\n```\n- Streamlit\n- Python\n- Pandas\n\
+    - numpy\n- matplotlib\n- altair\n- Git\n```\n\n\nDevelopment process of this app was split into smaller tasks. Here is\
+    \ the list of all tasks:\n```\n1. Set up a basic Streamlit app with a simple interface that has placeholder elements for\
+    \ user inputs (sliders and input fields), control buttons (start, stop, reset), and placeholders for visualizing outputs\
+    \ (graphs and tables).\n\n2. Develop the ABM simulation engine in Python using classes to define Farmers and Regulators\
+    \ with their attributes and methods for their behaviors and interactions.\n\n3. Integrate the ABM simulation engine with\
+    \ the Streamlit app, connecting user inputs to the simulation parameters and enabling the control buttons to start, stop,\
+    \ and reset the simulation.\n\n4. Implement data visualization for total production output and compliance levels using\
+    \ matplotlib and altair for graphs, and pandas for data manipulation.\n\n5. Conduct a stream of beta tests of the entire\
+    \ Streamlit app through iterative development cycles to ensure all parts work together smoothly, iron out any bugs and\
+    \ enhance the user interface based on feedback.\n\n```\nYou are currently working on task \"Implement data visualization\
+    \ for total production output and compliance levels using matplotlib and altair for graphs, and pandas for data manipulation.\"\
+    \ and you have to focus only on that task.\n\n\nA part of the app is already finished.Here are files that are currently\
+    \ implemented:\n\n**/streamlit_app.py**\n```\nimport streamlit as st\nfrom interface import user_input, control_buttons,\
+    \ output_placeholders\nfrom simulation.simulation_engine import SimulationEngine\nfrom simulation.simulation_state import\
+    \ simulation_state\nfrom interface.output_visualization import display_visualizations\n\nsim_engine = SimulationEngine()\n\
+    \ndef main():\n    # Show User Input Section\n    user_input.show()\n\n    # Show Control Buttons\n    control_buttons.show()\n\
+    \n    # Show Output Placeholders\n    output_placeholders.show()\n\n    if simulation_state.active:\n        simulation_data\
+    \ = sim_engine.get_simulation_data()\n        display_visualizations(simulation_data)\n\nif __name__ == \"__main__\":\n\
+    \    main()\n\n```\n\n**interface/control_buttons.py**\n```\nfrom simulation.simulation_state import simulation_state\n\
+    import streamlit as st\n\n# We'll import the simulation engine so we can start and reset the simulation appropriately\n\
+    from simulation.simulation_engine import SimulationEngine\n\n\ndef show():\n    st.header(\"Simulation Control\")\n  \
+    \  if st.button('Start'):\n        # Update the simulation state to reflect that the simulation should be running\n  \
+    \      simulation_state.start()\n        # Start the simulation\n        sim_engine = SimulationEngine()\n        sim_engine.run()\n\
+    \n    if st.button('Stop'):\n        # Update the simulation state to reflect that the simulation should be stopped\n\
+    \        simulation_state.stop()\n\n    if st.button('Reset'):\n        # Reset the simulation to initial conditions\n\
+    \        simulation_state.reset()\n\n```\n\n**interface/output_placeholders.py**\n```\nimport streamlit as st\n\ndef show():\n\
+    \    st.header(\"Simulation Output\")\n    \n    # Placeholder for total production output graph\n    st.subheader(\"\
+    Total Production Output\")\n    st.write(\"Graph placeholder\")\n\n    # Placeholder for compliance levels graph/table\n\
+    \    st.subheader(\"Compliance Levels\")\n    st.write(\"Graph/Table placeholder\")\n\n```\n\n**interface/user_input.py**\n\
+    ```\nimport streamlit as st\n\n# This is a global dictionary to hold user input values\nuser_inputs = {}\n\n\ndef show():\n\
+    \    st.sidebar.header(\"User Inputs\")\n\n    # Use global dictionary to store the input values\n    user_inputs['market_demand']\
+    \ = st.sidebar.slider('Market Demand', min_value=0, max_value=100, value=50)\n    user_inputs['regulatory_conditions']\
+    \ = st.sidebar.text_input('Regulatory Conditions', \"\")\n\n```\n\n**simulation/agent.py**\n```\nclass Agent:\n    def\
+    \ __init__(self, name):\n        self.name = name\n\n    def step(self):\n        pass  # INPUT_REQUIRED {Override this\
+    \ in subclasses with specific behavior}\n```\n\n**simulation/farmer.py**\n```\nfrom .agent import Agent\n\nclass Farmer(Agent):\n\
+    \    def __init__(self, name, production_capacity, compliance):\n        super().__init__(name)\n        self.production_capacity\
+    \ = production_capacity\n        self.compliance = compliance\n        self.production = 0\n\n    def produce(self, amount):\n\
+    \        self.production += amount\n\n    def earn(self, revenue):\n        pass\n\n    def step(self, market_conditions,\
+    \ regulatory_conditions):\n        if self.compliance:\n            adjusted_production_capacity = self.production_capacity\
+    \ * regulatory_conditions.get('compliance_factor', 1)\n        else:\n            adjusted_production_capacity = self.production_capacity\n\
+    \        demand = market_conditions.get('demand', 0)\n        price = market_conditions.get('price', 0)\n        production\
+    \ = min(adjusted_production_capacity, demand)\n        self.produce(production)\n        self.earn(production * price)\n\
+    \        # INPUT_REQUIRED {Implement changes in compliance based on regulatory conditions. Add logic here.}\n\n```\n\n\
+    **simulation/regulator.py**\n```\nfrom .agent import Agent\n\nclass Regulator(Agent):\n    def __init__(self, name, policy_influence):\n\
+    \        super().__init__(name)\n        self.policy_influence = policy_influence\n\n    def step(self, market_conditions):\n\
+    \        policy_effect = self.policy_influence_effect()\n        market_conditions.update(policy_effect)\n\n    def policy_influence_effect(self):\n\
+    \        adjusted_demand = 10  # INPUT_REQUIRED {Implement the logic for adjusted demand}\n        compliance_factor =\
+    \ 1.2  # INPUT_REQUIRED {Implement the logic for compliance factor}\n        other_factors = {}  # INPUT_REQUIRED {Define\
+    \ any other regulatory effects here}\n        return {\n            'demand': adjusted_demand,\n            'compliance_factor':\
+    \ compliance_factor,\n            'other_factors': other_factors\n        }\n\n```\n\n**simulation/simulation_engine.py**\n\
+    ```\nfrom .farmer import Farmer\nfrom .regulator import Regulator\nfrom .simulation_state import simulation_state\nfrom\
+    \ interface.user_input import user_inputs\nfrom .data_collector import DataCollector\n\nclass SimulationEngine:\n    def\
+    \ __init__(self):\n        self.farmers = [Farmer('Farmer1', 100, True)]\n        self.regulators = [Regulator('Regulator1',\
+    \ 0.1)]\n        self.market_conditions = {'demand': 0, 'price': 0}\n        self.data_collector = DataCollector()\n\n\
+    \    def set_market_conditions(self):\n        self.market_conditions = {\n            'demand': user_inputs.get('market_demand',\
+    \ 0),\n            'price': 10  # INPUT_REQUIRED {Adjust price based on simulation needs}\n        }\n\n    def step(self):\n\
+    \        if not simulation_state.active:\n            return\n        regulatory_conditions = self.get_regulatory_conditions()\n\
+    \        for farmer in self.farmers:\n            farmer.step(self.market_conditions, regulatory_conditions)\n       \
+    \ for regulator in self.regulators:\n            regulator.step(self.market_conditions)\n        self.data_collector.collect(self.farmers)\n\
+    \n    def get_regulatory_conditions(self):\n        \"\"\"\n        Aggregates all the policy influences from the regulators\
+    \ into a single set of regulatory conditions\n        \"\"\"\n        regulatory_conditions = {\n            'compliance_factor':\
+    \ 1,  \n            'other_factors': {}     \n        }\n        for reg in self.regulators:\n            effect = reg.policy_influence_effect()\n\
+    \            regulatory_conditions['compliance_factor'] *= effect.get('compliance_factor', 1)\n            for k, v in\
+    \ effect.get('other_factors', {}).items():\n                regulatory_conditions['other_factors'][k] = v\n        return\
+    \ regulatory_conditions\n\n    def run(self, steps=24):\n        self.reset()\n        simulation_state.start()\n    \
+    \    for _ in range(steps):\n            self.set_market_conditions()\n            self.step()\n        simulation_state.stop()\n\
+    \        \n    def reset(self):\n        self.farmers = [Farmer('Farmer1', 100, True)] # INPUT_REQUIRED {Reset or create\
+    \ farmers with initial parameters}\n        self.regulators = [Regulator('Regulator1', 0.1)] # INPUT_REQUIRED {Reset or\
+    \ create regulators with initial parameters}\n        self.market_conditions = {'demand': 0, 'price': 0}\n        self.data_collector.reset()\n\
+    \    \n    def get_simulation_data(self):\n        return self.data_collector.to_dataframe()\n\n```\n\n**simulation/simulation_state.py**\n\
+    ```\nclass SimulationState:\n    def __init__(self):\n        self.active = False  # Indicates if the simulation is active\n\
+    \n    def start(self):\n        self.active = True\n\n    def stop(self):\n        self.active = False\n\n    def reset(self):\n\
+    \        self.active = False\n        # Logic to reset the simulation's internal state was here\n\n# We instantiate a\
+    \ global state object to be shared across modules\nsimulation_state = SimulationState()\n\n```\n\n**/README.md**\n```\n\
+    # ABM: Agent-Based Model\n\n## Overview\nABM is a simplified simulation tool designed to model the South African cannabis\
+    \ and hemp industry dynamics using an agent-based approach in Streamlit. The model features two agent types: Farmers (both\
+    \ formal and informal) with attributes like production capacity and compliance status, and Regulators, influencing the\
+    \ market by policies. This simulation aims to help understand how these entities interact over a fixed period.\n\n## User\
+    \ Guide\nUsers interact with the ABM simulation through a Streamlit interface to:\n* Input market demand and regulatory\
+    \ conditions.\n* Control the simulation with start, stop, and reset functionalities.\n* Observe the outcomes through visualizations\
+    \ of production and compliance levels.\n\n## Installation & Running the Simulation\n1. Clone the repository.\n2. Install\
+    \ the required libraries: Streamlit, Python, Pandas, numpy, matplotlib, and altair.\n3. Run the `streamlit run streamlit_app.py`\
+    \ command in your terminal to initiate the interface.\n\n## Features\n* Interactive Streamlit UI for input parameter configuration.\n\
+    * Start, stop, and reset controls for the simulation.\n* Graphical representations for viewing simulation outputs.\n\n\
+    ## Development and Contribution\nThe codebase adheres to clean-coding principles and is well-documented to facilitate\
+    \ contributions. Developers should refer to in-code comments and docstrings for guidance. Contributions towards expanding\
+    \ the ABM's features and scalability are welcome.\n\nFor developers, please ensure you:\n* Maintain the coding standards\
+    \ as per the documentation.\n* Update the README.md and CHANGELOG.md as appropriate for new features or bug fixes.\n*\
+    \ Add unit tests for new code to ensure reliability.\n\n## Technical Architecture\nABM runs a Streamlit application (`streamlit_app.py`)\
+    \ that includes user input collection, control buttons, and output placeholders separated into modular Python files. The\
+    \ simulation logic is encapsulated in `simulation_engine.py`, iterating over the various agent classes such as `farmer.py`\
+    \ and `regulator.py`.\n\n## Project Structure\nThe project comprises several modules:\n* `/streamlit_app.py`: The entry\
+    \ point for the Streamlit application.\n* `/interface`: Modules for the user input, control buttons, and outputs display.\n\
+    * `/simulation`: Core modules for the agent-based model, including agent definitions and the simulation engine.\n\n##\
+    \ License\nThis project is released under the XYZ License. For more details, see the `LICENSE` file included in the repository.\n\
+    \n## Contact\nFor questions, suggestions, or contributions, please open an issue in the repository, and a maintainer will\
+    \ get back to you.\n\n### Disclaimer\nThis simulation is a basic model and may not account for all real-world dynamics\
+    \ of the South African cannabis and hemp industry. It is intended for educational and research purposes only.\n```\n\n\
+    **simulation/data_collector.py**\n```\nimport pandas as pd\n\nclass DataCollector:\n    def __init__(self):\n        self.data\
+    \ = {\n            'total_production': [],\n            'compliance_levels': [],\n        }\n    \n    def collect(self,\
+    \ farmers):\n        total_production = sum([farmer.production for farmer in farmers])\n        compliance_levels = [farmer.compliance\
+    \ for farmer in farmers]\n        self.data['total_production'].append(total_production)\n        self.data['compliance_levels'].append(compliance_levels)\n\
+    \n    def to_dataframe(self):\n        return pd.DataFrame(self.data)\n        \n    def reset(self):\n        self.data\
+    \ = {\n            'total_production': [],\n            'compliance_levels': [],\n        }\n\n```\n\n**interface/output_visualization.py**\n\
+    ```\nimport streamlit as st\nimport matplotlib\nmatplotlib.use('Agg')\nfrom visualization.production_output import show_total_production\n\
+    from visualization.compliance_levels import show_compliance_levels\n\ndef display_visualizations(simulation_data):\n \
+    \   st.subheader(\"Total Production Output\")\n    total_production_chart = show_total_production(simulation_data)\n \
+    \   st.pyplot(total_production_chart)\n\n    st.subheader(\"Compliance Levels\")\n    compliance_levels_chart = show_compliance_levels(simulation_data)\n\
+    \    st.altair_chart(compliance_levels_chart, use_container_width=True)\n\n```\n\n**visualization/compliance_levels.py**\n\
+    ```\nimport altair as alt\n\ndef show_compliance_levels(df):\n    compliance_df = df.explode('compliance_levels')\n  \
+    \  chart = alt.Chart(compliance_df).mark_bar().encode(\n        x=alt.X('index:O', title='Time Step'),\n        y=alt.Y('mean(compliance_levels):Q',\
+    \ title='Average Compliance Level'),\n        tooltip=['mean(compliance_levels)']\n    ).properties(\n        title='Compliance\
+    \ Levels Over Time',\n        width=600,\n        height=400\n    )\n    return chart\n\n```\n\n**visualization/production_output.py**\n\
+    ```\nimport matplotlib.pyplot as plt\n\ndef show_total_production(df):\n    plt.figure(figsize=(10, 6))\n    plt.plot(df.index,\
+    \ df['total_production'], marker='o')\n    plt.title('Total Production Over Time')\n    plt.xlabel('Time Step')\n    plt.ylabel('Total\
+    \ Production')\n    plt.grid(True)\n    plt.tight_layout()\n    return plt\n\n```\n\n\nNow, your colleague who is testing\
+    \ the app \"ABM\" sent you some additional info. Here it is:\n```\nthe simulation does not run when the button is pressed\n\
+    ```\n\nCan you debug this issue or implement changes to comply with the additional user input?\n\nTell me all the new\
+    \ code that needs to be written or modified to implement current task and have it fully working. You can count that the\
+    \ environment is set up previously and packages listed in files are installed so tell me only commands needed for installation\
+    \ of new dependencies, if there are any.\n\n\n**IMPORTANT**\nWhen you think about in which file should the new code go\
+    \ to, always try to make files as small as possible and put code in more smaller files rather than in one big file. Whenever\
+    \ a file becomes too large (more than 50 lines of code) split it into smaller files.\n\n\nYou do not need to make any\
+    \ automated tests work.\n\n**IMPORTANT**\nDo not tell me anything about setting up the database or anything OS related\
+    \ - only if some dependencies need to be installed."
+- role: assistant
+  content: "Given the feedback from the tester that \"the simulation does not run when the button is pressed,\" let's first\
+    \ consider the potential sources of this issue:\n\n1. The buttons might not actually be initiating the actions they're\
+    \ supposed to because the logic might not be correctly wired up to the buttons.\n2. There might be an issue in the simulation\
+    \ engine, or the state management might not be properly configured.\n3. There could be a logical error in the transition\
+    \ from state to state.\n\nLet's go through the code to detect potential issues concerning these aspects.\n\nFirst, we\
+    \ notice that in the `control_buttons.py`, a new `SimulationEngine` instance is being created inside the 'Start' button\
+    \ event handler every time the button is pressed but not being used to run the simulation since the `run` method call\
+    \ is not there.\n\n**/interface/control_buttons.py**\n```python\nfrom simulation.simulation_state import simulation_state\n\
+    import streamlit as st\n\n# We'll import the simulation engine so we can start and reset the simulation appropriately\n\
+    from simulation.simulation_engine import SimulationEngine\n\n\ndef show():\n    st.header(\"Simulation Control\")\n  \
+    \  sim_engine = SimulationEngine()  # Create a SimulationEngine instance at the top\n    \n    if st.button('Start'):\n\
+    \        # Update the simulation state to reflect that the simulation should be running\n        simulation_state.start()\n\
+    \        # Start the simulation\n        sim_engine.run()  # Call run on the sim_engine instance\n\n    if st.button('Stop'):\n\
+    \        # Update the simulation state to reflect that the simulation should be stopped\n        simulation_state.stop()\n\
+    \n    if st.button('Reset'):\n        # Reset the simulation to initial conditions\n        simulation_state.reset()\n\
+    \        sim_engine.reset()  # Reset the sim_engine instance\n```\n\nWe moved the instantiation of `SimulationEngine`\
+    \ to the top of the `show` function in `control_buttons.py` so it's the same instance being acted upon in each control\
+    \ button case. `sim_engine.run()` is now called within the 'Start' button handler to start the simulation, while `sim_engine.reset()`\
+    \ is called within the 'Reset' button handler to reset the simulation.\n\nNext, it is important to check the `SimulationEngine.run()`\
+    \ method. It seems like you have a placeholder `# INPUT_REQUIRED` which suggests there might be some logic missing or\
+    \ pending completion. If that's not the case, and the actual simulation logic is implemented inside `self.step()`, make\
+    \ sure that the simulation state on stop or reset is handled correctly \u2013 it should not only modify the `active` flag\
+    \ but also cleanup and setup for next run if necessary.\n\nEnsure to return immediately from `step()` if `simulation_state.active`\
+    \ is `False` to not resume the simulation once the stop button is clicked.\n\n**/simulation/simulation_engine.py**\n```python\n\
+    \    # ... other methods ...\n\n    def run(self, steps=24):\n        self.reset()\n        simulation_state.start()\n\
+    \        for _ in range(steps):\n            if not simulation_state.active:\n                break  # Stop the simulation\
+    \ if the active flag is False\n            self.set_market_conditions()\n            self.step()\n        simulation_state.stop()\n\
+    \n    # ... other methods ...\n```\n\nEnsure the `SimulationState` object is handling the states correctly and that there's\
+    \ no mismatch in the state transitions.\n\nThere is no need to add any new packages or dependencies since the specified\
+    \ packages already cover the data visualization requirements, and the issue seems to be more in the logic and state management\
+    \ rather than missing features.\n\nWith these modifications, the initial issue stated by the tester should be resolved.\
+    \ The simulation should now start running when the start button is pressed, stop when the stop button is pressed, and\
+    \ reset when the reset button is pressed, providing the expected visualizations in the Streamlit interface."
+- role: user
+  content: 'Ok, now, take your previous message and convert it to actionable items. An item might be a code change or a command
+    run. When you need to change code, make sure that you put the entire content of the file in the value of `content` key
+    even though you will likely copy and paste the most of the previous message. The commands must be able to run on a Windows
+    machine.
+
+
+    **IMPORTANT**
+
+    Within the file modifications, anything needs to be written by the user, add the comment in the same line as the code
+    that starts with `// INPUT_REQUIRED {input_description}` where `input_description` is a description of what needs to be
+    added here by the user. Just make sure that you put comments only inside files that support comments (e.g. not in JSON
+    files).
+
+
+    **IMPORTANT**
+
+    When you want to add a comment that tells the user to add the previous implementation at that place, make sure that the
+    comment starts with `[OLD CODE]` and add a description of what old code should be inserted here. For example, `[OLD CODE]
+    Login route`.
+
+
+    **IMPORTANT**
+
+    When you think about in which file should the new code go to, always try to make files as small as possible and put code
+    in more smaller files rather than in one big file. Whenever a file becomes too large (more than 50 lines of code) split
+    it into smaller files.'
+- role: user
+  content: "**IMPORTANT**\nYou must respond with ONLY the JSON object, with NO additional text or explanation.\n\nHere is\
+    \ the schema for the expected JSON object:\n```json\n{\n    \"tasks\": {\n        \"type\": \"array\",\n        \"description\"\
+    : \"List of smaller development steps that need to be done to complete the entire task.\",\n        \"items\": {\n   \
+    \         \"type\": \"object\",\n            \"description\": \"A smaller development step that needs to be done to complete\
+    \ the entire task.  Remember, if you need to run a command that doesn't finish by itself (eg. a command to run an  If\
+    \ you need to create a directory that doesn't exist and is not the root project directory, always create it by running\
+    \ a command `mkdir`\",\n            \"properties\": {\n                \"type\": {\n                    \"type\": \"string\"\
+    ,\n                    \"enum\": [\n                        \"command\",\n                        \"code_change\",\n \
+    \                       \"human_intervention\"\n                    ],\n                    \"description\": \"Type of\
+    \ the development step that needs to be done to complete the entire task.\"\n                },\n                \"command\"\
+    : {\n                    \"type\": \"object\",\n                    \"description\": \"Command that needs to be run to\
+    \ complete the current task. This should be used only if the task is of a type \\\"command\\\".\",\n                 \
+    \   \"properties\": {\n                        \"command\": {\n                            \"type\": \"string\",\n   \
+    \                         \"description\": \"A single command that needs to be executed.\"\n                        },\n\
+    \                        \"timeout\": {\n                            \"type\": \"number\",\n                         \
+    \   \"description\": \"Timeout in milliseconds that represent the approximate time this command takes to finish. If you\
+    \ need to run a command that doesnt't finish by itself (eg. a command to run an app), set the timeout to to a value long\
+    \ enough to determine that it has started successfully and provide a command_id. If you need to create a directory that\
+    \ doesn't exist and is not the root project directory, always create it by running a command `mkdir`\"\n             \
+    \           },\n                        \"success_message\": {\n                            \"type\": \"string\",\n  \
+    \                          \"description\": \"A message to look for in the output of the command to determine if successful\
+    \ or not.\"\n                        },\n                        \"command_id\": {\n                            \"type\"\
+    : \"string\",\n                            \"description\": \"If the process needs to continue running after the command\
+    \ is executed provide a unique command identifier which you can use to kill the process later.\"\n                   \
+    \     }\n                    },\n                    \"required\": [\n                        \"command\",\n         \
+    \               \"timeout\"\n                    ]\n                },\n                \"code_change\": {\n         \
+    \           \"type\": \"object\",\n                    \"description\": \"A code change that needs to be implemented.\
+    \ This should be used only if the task is of a type \\\"code_change\\\".\",\n                    \"properties\": {\n \
+    \                       \"name\": {\n                            \"type\": \"string\",\n                            \"\
+    description\": \"Name of the file that needs to be implemented.\"\n                        },\n                      \
+    \  \"path\": {\n                            \"type\": \"string\",\n                            \"description\": \"Full\
+    \ path of the file with the file name that needs to be implemented.\"\n                        },\n                  \
+    \      \"content\": {\n                            \"type\": \"string\",\n                            \"description\"\
+    : \"Full content of the file that needs to be implemented. **IMPORTANT**When you want to add a comment that tells the\
+    \ user to add the previous implementation at that place, make sure that the comment starts with `[OLD CODE]` and add a\
+    \ description of what old code should be inserted here. For example, `[OLD CODE] Login route`.\"\n                   \
+    \     }\n                    },\n                    \"required\": [\n                        \"name\",\n            \
+    \            \"path\",\n                        \"content\"\n                    ]\n                },\n             \
+    \   \"human_intervention_description\": {\n                    \"type\": \"string\",\n                    \"description\"\
+    : \"Description of a step in debugging this issue when there is a human intervention needed. This should be used only\
+    \ if the task is of a type \\\"human_intervention\\\".\"\n                }\n            },\n            \"required\"\
+    : [\n                \"type\"\n            ]\n        }\n    }\n}\n```\n\n"
+response: "```json\n{\n    \"tasks\": [\n        {\n            \"type\": \"code_change\",\n            \"code_change\": {\n\
+  \                \"name\": \"control_buttons.py\",\n                \"path\": \"/interface/control_buttons.py\",\n     \
+  \           \"content\": \"from simulation.simulation_state import simulation_state\\nimport streamlit as st\\n\\n# We'll\
+  \ import the simulation engine so we can start and reset the simulation appropriately\\nfrom simulation.simulation_engine\
+  \ import SimulationEngine\\n\\n\\ndef show():\\n    st.header(\\\"Simulation Control\\\")\\n    # This instance of SimulationEngine\
+  \ should be used for the start and reset actions\\n    sim_engine = SimulationEngine()\\n    \\n    if st.button('Start'):\\\
+  n        # Update the simulation state to reflect that the simulation should be running\\n        simulation_state.start()\\\
+  n        # Start the simulation\\n        sim_engine.run()\\n    \\n    if st.button('Stop'):\\n        # Update the simulation\
+  \ state to reflect that the simulation should be stopped\\n        simulation_state.stop()\\n\\n    if st.button('Reset'):\\\
+  n        # Update the simulation state to reflect that the simulation should be reset\\n        simulation_state.reset()\\\
+  n        # Reset the simulation to initial conditions\\n        sim_engine.reset()\\n\"\n            }\n        },\n   \
+  \     {\n            \"type\": \"code_change\",\n            \"code_change\": {\n                \"name\": \"simulation_engine.py\"\
+  ,\n                \"path\": \"/simulation/simulation_engine.py\",\n                \"content\": \"from .farmer import Farmer\\\
+  nfrom .regulator import Regulator\\nfrom .simulation_state import simulation_state\\nfrom interface.user_input import user_inputs\\\
+  nfrom .data_collector import DataCollector\\n\\nclass SimulationEngine:\\n    def __init__(self):\\n        self.farmers\
+  \ = [Farmer('Farmer1', 100, True)]\\n        self.regulators = [Regulator('Regulator1', 0.1)]\\n        self.market_conditions\
+  \ = {'demand': 0, 'price': 0}\\n        self.data_collector = DataCollector()\\n\\n    def set_market_conditions(self):\\\
+  n        self.market_conditions = {\\n            'demand': user_inputs.get('market_demand', 0),\\n            // INPUT_REQUIRED\
+  \ {Adjust price based on simulation needs}\\n            'price': 10\\n        }\\n\\n    def step(self):\\n        if not\
+  \ simulation_state.active:\\n            return\\n        regulatory_conditions = self.get_regulatory_conditions()\\n  \
+  \      for farmer in self.farmers:\\n            farmer.step(self.market_conditions, regulatory_conditions)\\n        for\
+  \ regulator in self.regulators:\\n            regulator.step(self.market_conditions)\\n        self.data_collector.collect(self.farmers)\\\
+  n\\n    def get_regulatory_conditions(self):\\n        regulatory_conditions = {\\n            'compliance_factor': 1, \
+  \ \\n            'other_factors': {}     \\n        }\\n        for reg in self.regulators:\\n            effect = reg.policy_influence_effect()\\\
+  n            regulatory_conditions['compliance_factor'] *= effect.get('compliance_factor', 1)\\n            for k, v in\
+  \ effect.get('other_factors', {}).items():\\n                regulatory_conditions['other_factors'][k] = v\\n        return\
+  \ regulatory_conditions\\n\\n    def run(self, steps=24):\\n        self.reset()\\n        simulation_state.start()\\n \
+  \       for _ in range(steps):\\n            if not simulation_state.active:\\n                break  // Stop the simulation\
+  \ if the active flag is False\\n            self.set_market_conditions()\\n            self.step()\\n        simulation_state.stop()\\\
+  n\\n    def reset(self):\\n        // INPUT_REQUIRED {Reset or create farmers with initial parameters}\\n        self.farmers\
+  \ = [Farmer('Farmer1', 100, True)]\\n        // INPUT_REQUIRED {Reset or create regulators with initial parameters}\\n \
+  \       self.regulators = [Regulator('Regulator1', 0.1)]\\n        self.market_conditions = {'demand': 0, 'price': 0}\\\
+  n        self.data_collector.reset()\\n    \\n    def get_simulation_data(self):\\n        return self.data_collector.to_dataframe()\\\
+  n\"\n            }\n        }\n    ]\n}\n```"

@@ -1,0 +1,233 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are an experienced tech lead in a software development agency and your main task is to break down the project
+    into smaller tasks that developers will do. You must specify each task as clear as possible. Each task must have a description
+    of what needs to be implemented, a programmatic goal that will determine if a task can be marked as done from a programmatic
+    perspective and user-review goal that will determine if a task is done or not but from a user perspective since it will
+    be reviewed by a human.
+- role: user
+  content: 'You are working in a software development agency and a project manager and software architect approach you telling
+    you that you''re assigned to work on a new project. You are working on a App called "ABM" and you need to create a detailed
+    development plan so that developers can start developing the app.
+
+
+    Here is a high level description of "ABM":
+
+    ```
+
+    Development of a Basic Agent-Based Model (ABM) named "ABM" will be undertaken to simulate the South African cannabis and
+    hemp industry using Streamlit. This basic version will feature two types of agents: Farmers (formal and informal) with
+    attributes like production capacity and compliance status, and Regulators who affect market conditions and policies. The
+    interactions will allow Farmers to respond to market conditions and Regulators to implement policies.
+
+
+    The simulation will run over a timeframe of two years per execution and is designed for a single user without support
+    for multiple simultaneous users. The Streamlit interface will enable user input for parameters such as market demand and
+    regulatory conditions through sliders or input fields. Users can control the simulation with start, stop, and reset buttons.
+
+
+    Data visualization will present results through graphs or tables, showcasing key outputs like total production and compliance
+    levels. However, no feedback mechanism for user input is required for this application.
+
+
+    Development guidelines include maintaining a clean, well-documented codebase, ensuring user-friendliness, and prioritizing
+    quick loading and smooth interaction. Codebase documentation will consist of an overview, in-code comments, descriptive
+    docstrings, a comprehensive README file, API documentation (if applicable), a change log or version control messages,
+    testing documentation, deployment instructions, coding standards, and future development notes.
+
+
+    The implementation does not require the collection of historical data input from users since default values for the simulation
+    parameters will be provided, which users can adjust. Design should account for scalability for eventual enhancement with
+    more complex features.
+
+    ```
+
+
+
+    Here are user stories that specify how users use "ABM":
+
+    ```
+
+
+    - User will input parameters for market demand and regulatory conditions using sliders or input fields in the Streamlit
+    interface.
+
+
+    - User will start the simulation by clicking the ''start'' button in the Streamlit interface.
+
+
+    - User will stop the ongoing simulation by clicking the ''stop'' button in the Streamlit interface.
+
+
+    - User will reset the simulation to initial conditions by clicking the ''reset'' button in the Streamlit interface.
+
+
+    - User will observe the total production output through graphs or tables within the Streamlit interface.
+
+
+    - User will assess compliance levels of the Farmers through visualizations in the Streamlit interface.
+
+
+    ```
+
+
+
+    Here are the technologies that you need to use for this project:
+
+    ```
+
+
+    - Streamlit
+
+
+    - Python
+
+
+    - Pandas
+
+
+    - numpy
+
+
+    - matplotlib
+
+
+    - altair
+
+
+    - Git
+
+
+    ```
+
+
+
+
+    Before we go into the coding part, I want you to split the development process of creating this app into smaller tasks
+    so that it is easier to develop, debug and make the app work. Each smaller task of this app has to be a whole that can
+    be reviewed by a developer to make sure we''re on a right track to create this app completely.
+
+
+    Each task needs to be related only to the development of this app and nothing else - once the app is fully working, that
+    is it. There shouldn''t be a task for researching, deployment, writing documentation, or anything that is not writing
+    the actual code.
+
+
+    Now, based on the project details provided, think task by task and create the entire development plan. Start from the
+    project setup and specify each task until the moment when the entire app should be fully working.
+
+
+    **IMPORTANT**
+
+    Dividing project into tasks is extremely important job and has to be done carefully while always strictly following all
+    rules listed bellow.
+
+
+    Rule #1
+
+    There should never be a task that is only testing or ensuring something works, every task must have coding involved. Have
+    this in mind for every task, but it is extremely important for last task of project. Testing if app works will be done
+    as part of each task.
+
+
+    Rule #2
+
+    You have to make sure the project is not split into tasks that are too small or simple for no reason but also not too
+    big or complex so that they are hard to develop, debug and review. Here are examples of poorly created tasks:
+
+
+    **too simple tasks**
+
+    - Set up a Node.js project and install all necessary dependencies.
+
+    - Establish a MongoDB database connection using Mongoose with the IP ''127.0.0.1''.
+
+
+    **too complex tasks**
+
+    - Set up Node.js project with /home, /profile, /register and /login routes that will have user authentication, connection
+    to MongoDB with user schemas, mailing of new users and frontend with nice design.
+
+
+    You must to avoid creating tasks that are too simple or too complex. You have to aim to create tasks that are medium complexity.
+    Here are examples of tasks that are good:
+
+
+    **good tasks**
+
+    - Set up a Node.js project, install all necessary dependencies and set up an express server with a simple route to `/ping`
+    that returns the status 200.
+
+    - Establish a MongoDB database connection and implement the message schema using Mongoose for persistent storage of messages.
+
+
+    Rule #3
+
+    Every app should have different number of tasks depending on complexity. Think task by task and create the minimum number
+    of tasks that are relevant for this specific app. Here are some examples of apps with different complexity that can give
+    you guidance on how many tasks you should create:
+
+
+    Example #1:
+
+    app description: "I want to create an app that will just say ''Hello World'' when I open it on my localhost:3000."
+
+    number of tasks: 1-3
+
+
+    Example #2:
+
+    app description: "Create a node.js app that enables users to register and log into the app. On frontend it should have
+    /home (shows user data), /register and /login. It should use sessions to keep user logged in."
+
+    number of tasks: 2-6
+
+
+    Example #3:
+
+    app description: "A cool online shoe store, with a sleek look. In terms of data models, there are shoes, categories and
+    user profiles. For web pages: product listing, details, shopping cart. It must look cool and jazzy."
+
+    number of tasks: 5-15'
+- role: user
+  content: "**IMPORTANT**\nYou must respond with ONLY the JSON object, with NO additional text or explanation.\n\nHere is\
+    \ the schema for the expected JSON object:\n```json\n{\n    \"plan\": {\n        \"type\": \"array\",\n        \"description\"\
+    : \"List of development tasks that need to be done to implement the entire plan.\",\n        \"items\": {\n          \
+    \  \"type\": \"object\",\n            \"description\": \"Development task that needs to be done to implement the entire\
+    \ plan.\",\n            \"properties\": {\n                \"description\": {\n                    \"type\": \"string\"\
+    ,\n                    \"description\": \"Description of the development task that needs to be done to implement the entire\
+    \ plan.\"\n                },\n                \"programmatic_goal\": {\n                    \"type\": \"string\",\n \
+    \                   \"description\": \"Detailed description of programmatic goal. Programmatic goal that will determine\
+    \ if a task can be marked as done from a programmatic perspective (this will result in an automated test that is run before\
+    \ the task is sent to you for a review). All details previously specified by user that are important for this task must\
+    \ be included in this programmatic goal.\"\n                },\n                \"user_review_goal\": {\n            \
+    \        \"type\": \"string\",\n                    \"description\": \"User review goal that will determine if a task\
+    \ is done or not, but from a user perspective since it will be reviewed by a human.\"\n                }\n           \
+    \ },\n            \"required\": [\n                \"description\",\n                \"programmatic_goal\",\n        \
+    \        \"user_review_goal\"\n            ]\n        }\n    }\n}\n```\n\n"
+response: "```json\n{\n    \"plan\": [\n        {\n            \"description\": \"Set up a basic Streamlit app with a simple\
+  \ interface that has placeholder elements for user inputs (sliders and input fields), control buttons (start, stop, reset),\
+  \ and placeholders for visualizing outputs (graphs and tables).\",\n            \"programmatic_goal\": \"Create a Streamlit\
+  \ interface with mock sliders, input fields, buttons, and placeholders for visualizations. Commit codebase to Git repository.\"\
+  ,\n            \"user_review_goal\": \"Ensure the Streamlit app launches with the defined elements visible and accessible,\
+  \ even if they are non-functional.\"\n        },\n        {\n            \"description\": \"Develop the ABM simulation engine\
+  \ in Python using classes to define Farmers and Regulators with their attributes and methods for their behaviors and interactions.\"\
+  ,\n            \"programmatic_goal\": \"Implement classes with attributes and methods, and test interactions between Farmers\
+  \ and Regulators without UI integration.\",\n            \"user_review_goal\": \"Verify the logic and interactions of Farmers\
+  \ and Regulators through unit tests.\"\n        },\n        {\n            \"description\": \"Integrate the ABM simulation\
+  \ engine with the Streamlit app, connecting user inputs to the simulation parameters and enabling the control buttons to\
+  \ start, stop, and reset the simulation.\",\n            \"programmatic_goal\": \"Complete Streamlit integration to perform\
+  \ simulations and respond to start, stop, and reset button actions. Commit updated code to Git.\",\n            \"user_review_goal\"\
+  : \"User can start, stop, and reset simulations using the buttons, and the simulation respects the inputs from the user.\"\
+  \n        },\n        {\n            \"description\": \"Implement data visualization for total production output and compliance\
+  \ levels using matplotlib and altair for graphs, and pandas for data manipulation.\",\n            \"programmatic_goal\"\
+  : \"Produce dynamic graphs and tables which update according to the simulation's progress. Ensure visualizations are committed\
+  \ to Git repository.\",\n            \"user_review_goal\": \"User views accurate and responsive graphs and tables reflecting\
+  \ total production and compliance levels corresponding to the simulation's outputs.\"\n        },\n        {\n         \
+  \   \"description\": \"Conduct a stream of beta tests of the entire Streamlit app through iterative development cycles to\
+  \ ensure all parts work together smoothly, iron out any bugs and enhance the user interface based on feedback.\",\n    \
+  \        \"programmatic_goal\": \"Iteratively refine code and user interface based on beta test results, with all changes\
+  \ committed to Git.\",\n            \"user_review_goal\": \"The app functions without bugs, responds swiftly to user inputs,\
+  \ and provides a user-friendly experience with clear, comprehensible visualizations.\"\n        }\n    ]\n}\n```"

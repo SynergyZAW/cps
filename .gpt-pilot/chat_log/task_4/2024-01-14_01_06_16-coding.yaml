@@ -1,0 +1,60 @@
+endpoint: OPENAI
+model: gpt-4-1106-preview
+messages:
+- role: system
+  content: You are a full stack software developer who works in a software development agency. You write very modular and
+    clean code. Your job is to implement tasks that your tech lead assigns you. Each task has a description of what needs
+    to be implemented, a programmatic goal that will determine if a task can be marked as done and user-review goal that will
+    determine if a task is done or not but from a user perspective since it will be reviewed by a human.
+- role: user
+  content: "Here is how the file `simulation/simulation_engine.py` looks like right now:\n```\nfrom .farmer import Farmer\n\
+    from .regulator import Regulator\nfrom .simulation_state import simulation_state  \nfrom interface.user_input import user_inputs\
+    \    \nfrom .data_collector import DataCollector\n\nclass SimulationEngine:\n    def __init__(self):\n        self.farmers\
+    \ = []\n        self.regulators = []\n        self.market_conditions = None\n        self.data_collector = DataCollector()\n\
+    \    \n    def add_farmer(self, name, production_capacity, compliance):\n        farmer = Farmer(name, production_capacity,\
+    \ compliance)\n        self.farmers.append(farmer)\n\n    def add_regulator(self, name, policy_influence):\n        regulator\
+    \ = Regulator(name, policy_influence)\n        self.regulators.append(regulator)\n\n    def set_market_conditions(self):\n\
+    \        self.market_conditions = user_inputs.get('market_demand')\n\n    def step(self):\n        if not simulation_state.active:\n\
+    \            return\n        for farmer in self.farmers:\n            production = min(farmer.production_capacity, self.market_conditions.get('demand'))\n\
+    \            revenue = production * self.market_conditions.get('price')\n            farmer.produce(production)\n    \
+    \        farmer.earn(revenue)\n            farmer.comply_with_regulations()\n        for regulator in self.regulators:\n\
+    \            regulator.implement_policies()\n            regulator.affect_market_conditions(self.market_conditions)\n\
+    \        self.data_collector.collect(self.farmers)\n\n    def reset(self):\n        self.farmers = []\n        self.regulators\
+    \ = []\n        self.market_conditions = None\n        self.data_collector.reset()\n    \n    def get_simulation_data(self):\n\
+    \        return self.data_collector.to_dataframe()\n\n    def run(self, steps=24):\n        for _ in range(steps):\n \
+    \           self.set_market_conditions()\n            self.step()\n\n```\n\nAnd here is the new implementation for the\
+    \ same file:\n```\nfrom .farmer import Farmer\nfrom .regulator import Regulator\nfrom .simulation_state import simulation_state\n\
+    from interface.user_input import user_inputs\nfrom .data_collector import DataCollector\n\nclass SimulationEngine:\n \
+    \   def __init__(self):\n        self.farmers = []\n        self.regulators = []\n        self.market_conditions = None\n\
+    \        self.data_collector = DataCollector()\n        # [OLD CODE] Add any additional initialization if needed\n\n \
+    \   def set_market_conditions(self):\n        # [OLD CODE] Define market_conditions based on user input\n\n    def get_regulatory_conditions(self):\n\
+    \        regulatory_conditions = {}\n        for regulator in self.regulators:\n            regulatory_conditions.update(regulator.policy_influence_effect())\n\
+    \        return regulatory_conditions\n\n    def step(self):\n        if not simulation_state.active:\n            return\n\
+    \        regulatory_conditions = self.get_regulatory_conditions()\n        for farmer in self.farmers:\n            farmer.step(self.market_conditions,\
+    \ regulatory_conditions)\n        for regulator in self.regulators:\n            regulator.step(self.market_conditions)\n\
+    \        self.data_collector.collect(self.farmers)\n\n        # [OLD CODE] Add any other step logic if necessary\n\n```\n\
+    \nNow, implement the new changes into the previously implemented file and return the entirely coded file. Do not add any\
+    \ lines of code that are not in the previously coded file or the new implementation but only combine those two.\n\n**IMPORTANT**\n\
+    All lines of code in the new implementation should be present. From the old implementation, only take the ones that are\
+    \ replaced with the comment `[OLD CODE]` in the new implementation\n\n**IMPORTANT**\nMake sure that you respond with all\
+    \ lines of code that are replaced by these comments, including all control structures, error handling, and any other relevant\
+    \ logic that was in the original code.\nUnder no circumstances should you ever leave any part of the code snippet unwritten.\
+    \ Every single line of code that exists in the place where the comment lives right now should be replaced. Do not include\
+    \ any code that is above or below the comment but only the code that should be in the position of the comment."
+- role: user
+  content: "**IMPORTANT**\nYou must respond with ONLY the JSON object, with NO additional text or explanation.\n\nHere is\
+    \ the schema for the expected JSON object:\n```json\n{\n    \"file_content\": {\n        \"type\": \"string\",\n     \
+    \   \"description\": \"Fully coded file. This contains only the lines of code and no other text.\"\n    }\n}\n```\n\n"
+response: "```json\n{\n    \"file_content\": \"from .farmer import Farmer\\nfrom .regulator import Regulator\\nfrom .simulation_state\
+  \ import simulation_state\\nfrom interface.user_input import user_inputs\\nfrom .data_collector import DataCollector\\n\\\
+  nclass SimulationEngine:\\n    def __init__(self):\\n        self.farmers = []\\n        self.regulators = []\\n       \
+  \ self.market_conditions = None\\n        self.data_collector = DataCollector()\\n\\n    def set_market_conditions(self):\\\
+  n        self.market_conditions = user_inputs.get('market_demand')\\n\\n    def get_regulatory_conditions(self):\\n    \
+  \    regulatory_conditions = {}\\n        for regulator in self.regulators:\\n            regulatory_conditions.update(regulator.policy_influence_effect())\\\
+  n        return regulatory_conditions\\n\\n    def step(self):\\n        if not simulation_state.active:\\n            return\\\
+  n        regulatory_conditions = self.get_regulatory_conditions()\\n        for farmer in self.farmers:\\n            farmer.step(self.market_conditions,\
+  \ regulatory_conditions)\\n        for regulator in self.regulators:\\n            regulator.step(self.market_conditions)\\\
+  n        self.data_collector.collect(self.farmers)\\n\\n    def reset(self):\\n        self.farmers = []\\n        self.regulators\
+  \ = []\\n        self.market_conditions = None\\n        self.data_collector.reset()\\n    \\n    def get_simulation_data(self):\\\
+  n        return self.data_collector.to_dataframe()\\n\\n    def run(self, steps=24):\\n        for _ in range(steps):\\\
+  n            self.set_market_conditions()\\n            self.step()\\n\"\n}\n```"

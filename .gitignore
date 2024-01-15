@@ -1,0 +1,4 @@
+
+# Ignore the .gpt-pilot directory and simulation_errors.log
+.gpt-pilot/
+simulation_errors.log

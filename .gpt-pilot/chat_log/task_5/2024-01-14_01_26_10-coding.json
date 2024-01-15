@@ -1,0 +1,140 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "start_debugging",
+      "description": "Starts the debugging process based on the list of steps that need to be done to debug the problem.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "thoughts": {
+            "type": "string",
+            "description": "Thoughts that you have about the problem that you are trying to debug."
+          },
+          "reasoning": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "description": "List of steps that need to be done to debug the problem.",
+            "items": {
+              "type": "object",
+              "description": "A single step that needs to be done to get closer to debugging this issue.  Remember, if you need to run a command that doesn't finish by itself (eg. a command to run an app), put the timeout to 3000 milliseconds. If you need to create a directory that doesn't exist and is not the root project directory, always create it by running a command `mkdir`",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "command",
+                    "code_change",
+                    "human_intervention"
+                  ],
+                  "description": "Type of the step that needs to be done to debug this issue."
+                },
+                "command": {
+                  "type": "object",
+                  "description": "Command that needs to be run to complete the current task. This should be used only if the task is of a type \"command\".",
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "description": "Command that needs to be run to debug this issue."
+                    },
+                    "timeout": {
+                      "type": "number",
+                      "description": "Timeout in milliseconds that represent the approximate time this command takes to finish. If you need to run a command that doesn't finish by itself (eg. a command to run an app), put the timeout to 3000 milliseconds."
+                    },
+                    "success_message": {
+                      "type": "string",
+                      "description": "A message to look for in the output of the command to determine if successful or not."
+                    },
+                    "command_id": {
+                      "type": "string",
+                      "description": "If the process needs to continue running after the command is executed provide a unique command identifier which you can use to kill the process later."
+                    }
+                  },
+                  "required": [
+                    "command",
+                    "timeout"
+                  ]
+                },
+                "code_change_description": {
+                  "type": "string",
+                  "description": "Description of a step in debugging this issue when there are code changes required. This should be used only if the task is of a type \"code_change\" and it should thoroughly describe what needs to be done to implement the code change for a single file - it cannot include changes for multiple files."
+                },
+                "human_intervention_description": {
+                  "type": "string",
+                  "description": "Description of a step in debugging this issue when there is a human intervention needed. This should be used only if the task is of a type \"human_intervention\"."
+                },
+                "need_to_see_output": {
+                  "type": "boolean",
+                  "description": "Set to `true` if the definition of subsequent steps may need to change after you see the output of a successful execution of this step. For example, if the purpose of a command is to check the status of a service or contents of a file before deciding how to proceed then this flag should be set to `true`. If subsequent steps can be executed as long as this step is successful, then this flag does not need to be set."
+                },
+                "check_if_fixed": {
+                  "type": "boolean",
+                  "description": "Flag that indicates if the original command that triggered the error that's being debugged should be tried after this step to check if the error is fixed. If you think that the original command `delete node_modules/ && delete package-lock.json` will pass after this step, then this flag should be set to TRUE and if you think that the original command will still fail after this step, then this flag should be set to `false`."
+                }
+              },
+              "required": [
+                "type",
+                "check_if_fixed"
+              ]
+            }
+          }
+        },
+        "required": [
+          "thoughts",
+          "reasoning",
+          "steps"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "thoughts": "Since manual interaction is required to debug the issue, we need to simulate a user session by running the Streamlit app. Careful observation of app behavior during interaction will aid in identifying unexpected behavior or bugs. It would be beneficial to log these observations for further analysis.",
+    "reasoning": "Performing manual testing by running the Streamlit application will allow for real-time interaction with the app similar to that of an end-user. We can detect the issues that might not have been caught with automated tests, such as UI glitches, performance issues, and others. Once identified, we can take the necessary steps to fix them.",
+    "steps": [
+      {
+        "type": "command",
+        "command": {
+          "command": "streamlit run streamlit_app.py",
+          "timeout": 3000
+        },
+        "check_if_fixed": false
+      },
+      {
+        "type": "human_intervention",
+        "human_intervention_description": "Manually interact with the application to test parameter inputs, control buttons, and visualizations. Look for any bugs, performance issues, or any other unexpected behavior. Log the issues found for later review and fixing.",
+        "check_if_fixed": false
+      },
+      {
+        "type": "command",
+        "command": {
+          "command": "taskkill /IM streamlit.exe /F",
+          "timeout": 1000
+        },
+        "check_if_fixed": false
+      },
+      {
+        "type": "code_change",
+        "code_change_description": "Based on the issues found during manual testing, plan and implement necessary code changes to resolve the detected problems. For rendering issues in visuals, for instance, review and modify the drawing functions in the /visualization folder. For UI responsiveness or errors, the corresponding functions in the /interface folder might need adjustments. If session state management issues are identified, the /simulation folder should be examined to ensure state is properly maintained across reruns.",
+        "check_if_fixed": false
+      },
+      {
+        "type": "command",
+        "command": {
+          "command": "git add . && git commit -m 'Fix issues identified during beta testing'",
+          "timeout": 2000
+        },
+        "check_if_fixed": false
+      },
+      {
+        "type": "command",
+        "command": {
+          "command": "streamlit run streamlit_app.py",
+          "timeout": 3000
+        },
+        "check_if_fixed": true
+      }
+    ]
+  }
+}

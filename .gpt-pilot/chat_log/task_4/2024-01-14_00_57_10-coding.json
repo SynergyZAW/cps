@@ -1,0 +1,161 @@
+{
+  "endpoint": "OPENAI",
+  "model": "gpt-4-1106-preview",
+  "functions": [
+    {
+      "name": "parse_development_task",
+      "description": "Breaks down the development task into smaller steps that need to be done to implement the entire task.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "description": "List of smaller development steps that need to be done to complete the entire task.",
+            "items": {
+              "type": "object",
+              "description": "A smaller development step that needs to be done to complete the entire task.  Remember, if you need to run a command that doesn't finish by itself (eg. a command to run an  If you need to create a directory that doesn't exist and is not the root project directory, always create it by running a command `mkdir`",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "command",
+                    "code_change",
+                    "human_intervention"
+                  ],
+                  "description": "Type of the development step that needs to be done to complete the entire task."
+                },
+                "command": {
+                  "type": "object",
+                  "description": "Command that needs to be run to complete the current task. This should be used only if the task is of a type \"command\".",
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "description": "A single command that needs to be executed."
+                    },
+                    "timeout": {
+                      "type": "number",
+                      "description": "Timeout in milliseconds that represent the approximate time this command takes to finish. If you need to run a command that doesnt't finish by itself (eg. a command to run an app), set the timeout to to a value long enough to determine that it has started successfully and provide a command_id. If you need to create a directory that doesn't exist and is not the root project directory, always create it by running a command `mkdir`"
+                    },
+                    "success_message": {
+                      "type": "string",
+                      "description": "A message to look for in the output of the command to determine if successful or not."
+                    },
+                    "command_id": {
+                      "type": "string",
+                      "description": "If the process needs to continue running after the command is executed provide a unique command identifier which you can use to kill the process later."
+                    }
+                  },
+                  "required": [
+                    "command",
+                    "timeout"
+                  ]
+                },
+                "code_change": {
+                  "type": "object",
+                  "description": "A code change that needs to be implemented. This should be used only if the task is of a type \"code_change\".",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the file that needs to be implemented."
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Full path of the file with the file name that needs to be implemented."
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Full content of the file that needs to be implemented. **IMPORTANT**When you want to add a comment that tells the user to add the previous implementation at that place, make sure that the comment starts with `[OLD CODE]` and add a description of what old code should be inserted here. For example, `[OLD CODE] Login route`."
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "path",
+                    "content"
+                  ]
+                },
+                "human_intervention_description": {
+                  "type": "string",
+                  "description": "Description of a step in debugging this issue when there is a human intervention needed. This should be used only if the task is of a type \"human_intervention\"."
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "tasks": [
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "data_collector.py",
+          "path": "/simulation/data_collector.py",
+          "content": "import pandas as pd\n\nclass DataCollector:\n    def __init__(self):\n        self.data = {\n            'total_production': [],\n            'compliance_levels': [],\n        }\n    \n    def collect(self, farmers):\n        total_production = sum([farmer.production for farmer in farmers])\n        compliance_levels = [farmer.compliance for farmer in farmers]\n        self.data['total_production'].append(total_production)\n        self.data['compliance_levels'].append(compliance_levels)\n\n    def to_dataframe(self):\n        return pd.DataFrame(self.data)\n        \n    def reset(self):\n        self.data = {\n            'total_production': [],\n            'compliance_levels': [],\n        }\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "farmer.py",
+          "path": "/simulation/farmer.py",
+          "content": "[OLD CODE] Farmer class imports and definitions\n\nclass Farmer(Agent):\n    def __init__(self, name, production_capacity, compliance):\n        super().__init__(name)\n        self.production_capacity = production_capacity\n        self.compliance = compliance\n        self.production = 0  // Initialize production\n\n    def produce(self, amount):\n        self.production = amount  // Set the current production level\n        \n    [OLD CODE] Remaining Farmer methods and functionality\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "simulation_engine.py",
+          "path": "/simulation/simulation_engine.py",
+          "content": "[OLD CODE] SimulationEngine class imports, constructor, and add_* methods\n\nfrom .data_collector import DataCollector\n\nclass SimulationEngine:\n    def __init__(self):\n        [OLD CODE] Initialization of other attributes\n        self.data_collector = DataCollector()  // Initialize the data collector\n    \n    def step(self):\n        [OLD CODE] Previous step logic\n        self.data_collector.collect(self.farmers)  // Collect data after each step\n\n    def reset(self):\n        [OLD CODE] Other reset logic\n        self.data_collector.reset()  // Reset the data collector\n    \n    def get_simulation_data(self):\n        return self.data_collector.to_dataframe()\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "production_output.py",
+          "path": "/visualization/production_output.py",
+          "content": "import matplotlib.pyplot as plt\n\ndef show_total_production(df):\n    plt.figure(figsize=(10, 6))\n    plt.plot(df.index, df['total_production'], marker='o')\n    plt.title('Total Production Over Time')\n    plt.xlabel('Time Step')\n    plt.ylabel('Total Production')\n    plt.grid(True)\n    plt.tight_layout()\n    return plt\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "compliance_levels.py",
+          "path": "/visualization/compliance_levels.py",
+          "content": "import altair as alt\n\ndef show_compliance_levels(df):\n    compliance_df = df.explode('compliance_levels')\n    chart = alt.Chart(compliance_df).mark_bar().encode(\n        x=alt.X('index:O', title='Time Step'),\n        y=alt.Y('mean(compliance_levels):Q', title='Average Compliance Level'),\n        tooltip=['mean(compliance_levels)']\n    ).properties(\n        title='Compliance Levels Over Time',\n        width=600,\n        height=400\n    )\n    return chart\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "output_visualization.py",
+          "path": "/interface/output_visualization.py",
+          "content": "import streamlit as st\nfrom visualization.production_output import show_total_production\nfrom visualization.compliance_levels import show_compliance_levels\n\ndef display_visualizations(simulation_data):\n    st.subheader(\"Total Production Output\")\n    total_production_chart = show_total_production(simulation_data)\n    st.pyplot(total_production_chart)\n\n    st.subheader(\"Compliance Levels\")\n    compliance_levels_chart = show_compliance_levels(simulation_data)\n    st.altair_chart(compliance_levels_chart, use_container_width=True)\n"
+        }
+      },
+      {
+        "type": "code_change",
+        "code_change": {
+          "name": "streamlit_app.py",
+          "path": "/streamlit_app.py",
+          "content": "import streamlit as st\nfrom interface import user_input, control_buttons, output_placeholders\nfrom simulation.simulation_engine import SimulationEngine\nfrom simulation.simulation_state import simulation_state\nfrom interface.output_visualization import display_visualizations\n\nsim_engine = SimulationEngine()\n\ndef main():\n    # Show User Input Section\n    user_input.show()\n\n    # Show Control Buttons\n    control_buttons.show()\n\n    # Show Output Placeholders\n    output_placeholders.show()\n\n    if simulation_state.active:\n        simulation_data = sim_engine.get_simulation_data()\n        display_visualizations(simulation_data)\n\nif __name__ == \"__main__\":\n    main()\n"
+        }
+      },
+      {
+        "type": "command",
+        "command": {
+          "command": "streamlit run /path/to/streamlit_app.py",
+          "timeout": 15000,
+          "success_message": "You can now view your Streamlit app in your browser."
+        }
+      }
+    ]
+  }
+}
