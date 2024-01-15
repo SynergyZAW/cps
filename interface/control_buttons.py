@@ -15,7 +15,7 @@ def show():
     if st.button('Start'):
         simulation_state.start()
         st.session_state.sim_engine = sim_engine
-        st.experimental_rerun()
+        st.rerun()
 
     if st.button('Stop'):
         simulation_state.stop()
@@ -24,4 +24,4 @@ def show():
         simulation_state.reset()
         sim_engine.reset()
         del st.session_state.sim_engine
-        st.experimental_rerun()
+        st.rerun()
